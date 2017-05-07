@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package com.nu.art.software.modular.core;
+package com.nu.art.modular.core;
 
 import java.util.HashMap;
 import java.util.Set;

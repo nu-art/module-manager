@@ -18,10 +18,9 @@
  * limitations under the License.
  */
 
-package com.nu.art.software.modular.exceptions;
+package com.nu.art.modular.exceptions;
 
-import com.nu.art.software.core.exceptions.RuntimeInternalException;
-import com.nu.art.software.modular.core.Module;
+import com.nu.art.core.exceptions.RuntimeInternalException;
 
 public class ModuleNotSupportedException
 		extends RuntimeInternalException {
@@ -36,18 +35,18 @@ public class ModuleNotSupportedException
 		super(reason);
 	}
 
-	public ModuleNotSupportedException(Class<? extends Module> moduleType, String reason, Throwable e) {
+	public ModuleNotSupportedException(Class<? extends com.nu.art.modular.core.Module> moduleType, String reason, Throwable e) {
 		super("Could not attach module: " + moduleType.getName() + ", reason: " + reason, e);
 		e.printStackTrace();
 	}
 
-	public ModuleNotSupportedException(Class<? extends Module> moduleType, Throwable e) {
+	public ModuleNotSupportedException(Class<? extends com.nu.art.modular.core.Module> moduleType, Throwable e) {
 		super("Could not attach module: " + moduleType.getName(), e);
 		System.err.println();
 		e.printStackTrace();
 	}
 
-	public ModuleNotSupportedException(Class<? extends Module> moduleType, String reason) {
+	public ModuleNotSupportedException(Class<? extends com.nu.art.modular.core.Module> moduleType, String reason) {
 		super("Could not attach module: " + moduleType.getName() + ", reason: " + reason);
 	}
 }

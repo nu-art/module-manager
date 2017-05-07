@@ -18,12 +18,10 @@
  * limitations under the License.
  */
 
-package com.nu.art.software.modular.interfaces;
-
-import com.nu.art.software.modular.core.Module;
+package com.nu.art.modular.interfaces;
 
 @SuppressWarnings("rawtypes")
 public interface ModuleManagerDelegator {
 
-	<ModuleType extends Module> ModuleType getModule(Class<ModuleType> moduleType);
+	<ModuleType extends com.nu.art.modular.core.Module> ModuleType getModule(Class<ModuleType> moduleType);
 }

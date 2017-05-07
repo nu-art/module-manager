@@ -18,10 +18,10 @@
  * limitations under the License.
  */
 
-package com.nu.art.software.modular.core;
+package com.nu.art.modular.core;
 
-import com.nu.art.software.core.exceptions.runtime.BadImplementationException;
-import com.nu.art.software.core.tools.ArrayTools;
+import com.nu.art.core.exceptions.runtime.BadImplementationException;
+import com.nu.art.core.tools.ArrayTools;
 
 /**
  * This is an important aspect of Cyborg, these packs are meant to encapsulate <b>YOUR</b> modules, and to allow you to add different packs to construct your

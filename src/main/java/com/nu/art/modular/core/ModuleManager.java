@@ -18,12 +18,11 @@
  * limitations under the License.
  */
 
-package com.nu.art.software.modular.core;
+package com.nu.art.modular.core;
 
-import com.nu.art.software.core.exceptions.runtime.ImplementationMissingException;
-import com.nu.art.software.core.generics.Processor;
-import com.nu.art.software.modular.interfaces.ModuleManagerDelegator;
-import com.nu.art.software.reflection.tools.ReflectiveTools;
+import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
+import com.nu.art.core.generics.Processor;
+import com.nu.art.reflection.tools.ReflectiveTools;
 
 import java.util.HashMap;
 
@@ -32,7 +31,7 @@ import java.util.HashMap;
  */
 @SuppressWarnings("rawtypes")
 public class ModuleManager
-		implements ModuleManagerDelegator {
+		implements com.nu.art.modular.interfaces.ModuleManagerDelegator {
 
 	/**
 	 * Holds a references to all the module types which have registered to this main module,

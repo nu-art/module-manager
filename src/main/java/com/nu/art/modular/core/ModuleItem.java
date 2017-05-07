@@ -18,16 +18,14 @@
  * limitations under the License.
  */
 
-package com.nu.art.software.modular.core;
-
-import com.nu.art.software.modular.interfaces.ModuleManagerDelegator;
+package com.nu.art.modular.core;
 
 /**
  * Created by TacB0sS on 08-Oct 2016.
  */
 
 public abstract class ModuleItem
-		implements ModuleManagerDelegator {
+		implements com.nu.art.modular.interfaces.ModuleManagerDelegator {
 
 	private ModuleManager moduleManager;
 

@@ -18,18 +18,16 @@
  * limitations under the License.
  */
 
-package com.nu.art.software.modular.core;
+package com.nu.art.modular.core;
 
-import com.nu.art.software.core.interfaces.ILogger;
-import com.nu.art.software.core.tools.ArrayTools;
-import com.nu.art.software.modular.exceptions.ModuleNotSupportedException;
-import com.nu.art.software.modular.interfaces.ModuleManagerDelegator;
-import com.nu.art.software.reflection.tools.ReflectiveTools;
+import com.nu.art.core.interfaces.ILogger;
+import com.nu.art.core.tools.ArrayTools;
+import com.nu.art.reflection.tools.ReflectiveTools;
 
 import java.util.ArrayList;
 
 public class ModuleManagerBuilder
-		implements ModuleManagerDelegator {
+		implements com.nu.art.modular.interfaces.ModuleManagerDelegator {
 
 	protected final ModuleManager moduleManager;
 
@@ -97,7 +95,7 @@ public class ModuleManagerBuilder
 			module.validateModule(result);
 
 		if (!result.isEmpty())
-			throw new ModuleNotSupportedException("\n" + result.getErrorData());
+			throw new com.nu.art.modular.exceptions.ModuleNotSupportedException("\n" + result.getErrorData());
 	}
 
 	@SuppressWarnings("unused")

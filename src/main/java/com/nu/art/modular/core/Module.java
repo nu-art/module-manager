@@ -18,12 +18,12 @@
  * limitations under the License.
  */
 
-package com.nu.art.software.modular.core;
+package com.nu.art.modular.core;
 
-import com.nu.art.software.core.generics.Processor;
-import com.nu.art.software.core.interfaces.ILogger;
-import com.nu.art.software.modular.interfaces.ModuleManagerDelegator;
-import com.nu.art.software.reflection.tools.ReflectiveTools;
+import com.nu.art.core.generics.Processor;
+import com.nu.art.core.interfaces.ILogger;
+import com.nu.art.modular.interfaces.ModuleManagerDelegator;
+import com.nu.art.reflection.tools.ReflectiveTools;
 
 @SuppressWarnings("rawtypes")
 public abstract class Module
@@ -47,13 +47,13 @@ public abstract class Module
 		return moduleManager.getModule(moduleType);
 	}
 
-	protected final <Type extends ModuleItem> Type createModuleItem(Class<Type> moduleItemType) {
+	protected final <Type extends com.nu.art.modular.core.ModuleItem> Type createModuleItem(Class<Type> moduleItemType) {
 		Type type = instantiateModuleItem(moduleItemType);
 		type.init();
 		return type;
 	}
 
-	protected <Type extends ModuleItem> Type instantiateModuleItem(Class<Type> moduleItemType) {
+	protected <Type extends com.nu.art.modular.core.ModuleItem> Type instantiateModuleItem(Class<Type> moduleItemType) {
 		Type type = ReflectiveTools.newInstance(moduleItemType);
 		type.setModuleManager(moduleManager);
 		return type;
@@ -67,7 +67,7 @@ public abstract class Module
 
 	protected void printDetails() {}
 
-	protected void validateModule(ValidationResult result) {}
+	protected void validateModule(com.nu.art.modular.core.ValidationResult result) {}
 
 	@Override
 	public void logVerbose(String verbose) {
