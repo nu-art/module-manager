@@ -28,18 +28,18 @@ apply plugin: 'maven'
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            def finalPath = 'file://' + LocalMavenRepoPath.toString()
-            repository url: finalPath
-            pom.groupId = group
-            pom.artifactId = artifact
-            pom.version = version
-            pom.packaging = 'jar'
-        }
-    }
-}
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            def finalPath = 'file://' + LocalMavenRepoPath.toString()
+//            repository url: finalPath
+//            pom.groupId = group
+//            pom.artifactId = artifact
+//            pom.version = version
+//            pom.packaging = 'jar'
+//        }
+//    }
+//}
 
 dependencies {
     compile project(':reflection')
