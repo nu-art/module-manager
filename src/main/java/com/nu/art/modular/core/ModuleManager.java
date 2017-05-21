@@ -33,6 +33,13 @@ import java.util.HashMap;
 public class ModuleManager
 		implements com.nu.art.modular.interfaces.ModuleManagerDelegator {
 
+	public interface OnModuleInitializedListener {
+
+		void onModuleInitialized(Module module);
+	}
+
+	private OnModuleInitializedListener moduleInitializedListener;
+
 	/**
 	 * Holds a references to all the module types which have registered to this main module,
 	 */
@@ -56,6 +63,10 @@ public class ModuleManager
 		return orderedModules;
 	}
 
+	public final void setModuleListener(OnModuleInitializedListener moduleInitializedListener) {
+		this.moduleInitializedListener = moduleInitializedListener;
+	}
+
 	@SuppressWarnings("unchecked")
 	private <ModuleType extends Module> ModuleType getModule(Class<ModuleType> moduleType, boolean throwException) {
 		ModuleType module = (ModuleType) registeredModules.get(moduleType);
@@ -68,6 +79,11 @@ public class ModuleManager
 	final void init() {
 		for (Module module : orderedModules) {
 			module.init();
+
+			if (moduleInitializedListener == null)
+				continue;
+
+			moduleInitializedListener.onModuleInitialized(module);
 		}
 	}
 
@@ -98,8 +114,8 @@ public class ModuleManager
 			try {
 				processor.process((ParentType) module);
 			} catch (Throwable t) {
-				String errorMessage = "Error while processing module event:\n   parentType: " + parentType.getSimpleName() + "\n   moduleType: " + module
-						.getClass().getSimpleName();
+				String errorMessage = "Error while processing module event:\n   parentType: " + parentType.getSimpleName() + "\n   moduleType: " + module.getClass()
+						.getSimpleName();
 				System.err.print(errorMessage);
 				t.printStackTrace();
 			}

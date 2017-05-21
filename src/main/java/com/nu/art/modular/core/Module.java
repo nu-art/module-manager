@@ -67,7 +67,7 @@ public abstract class Module
 
 	protected void printDetails() {}
 
-	protected void validateModule(com.nu.art.modular.core.ValidationResult result) {}
+	protected void validateModule(ValidationResult result) {}
 
 	@Override
 	public void logVerbose(String verbose) {
