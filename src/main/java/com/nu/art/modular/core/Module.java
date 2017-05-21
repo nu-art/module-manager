@@ -47,19 +47,20 @@ public abstract class Module
 		return moduleManager.getModule(moduleType);
 	}
 
-	protected final <Type extends com.nu.art.modular.core.ModuleItem> Type createModuleItem(Class<Type> moduleItemType) {
+	protected final <Type extends ModuleItem> Type createModuleItem(Class<Type> moduleItemType) {
 		Type type = instantiateModuleItem(moduleItemType);
 		type.init();
 		return type;
 	}
 
-	protected <Type extends com.nu.art.modular.core.ModuleItem> Type instantiateModuleItem(Class<Type> moduleItemType) {
+	protected <Type extends ModuleItem> Type instantiateModuleItem(Class<Type> moduleItemType) {
 		Type type = ReflectiveTools.newInstance(moduleItemType);
 		type.setModuleManager(moduleManager);
 		return type;
 	}
 
 	protected final <ListenerType> void dispatchModuleEvent(String message, Class<ListenerType> listenerType, Processor<ListenerType> processor) {
+		logger.logInfo("Dispatch module event: " + message);
 		moduleManager.dispatchModuleEvent(message, listenerType, processor);
 	}
 
@@ -67,7 +68,7 @@ public abstract class Module
 
 	protected void printDetails() {}
 
-	protected void validateModule(com.nu.art.modular.core.ValidationResult result) {}
+	protected void validateModule(ValidationResult result) {}
 
 	@Override
 	public void logVerbose(String verbose) {
