@@ -22,8 +22,12 @@ package com.nu.art.modular.core;
 
 import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
 import com.nu.art.core.generics.Processor;
+import com.nu.art.modular.interfaces.ModuleManagerDelegator;
+import com.nu.art.reflection.injector.Injector;
+import com.nu.art.reflection.tools.ART_Tools;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 /**
@@ -31,12 +35,38 @@ import java.util.HashMap;
  */
 @SuppressWarnings("rawtypes")
 public class ModuleManager
-		implements com.nu.art.modular.interfaces.ModuleManagerDelegator {
+		implements ModuleManagerDelegator {
 
 	public interface OnModuleInitializedListener {
 
 		void onModuleInitialized(Module module);
 	}
+
+	public final class ModuleInjector
+			extends Injector<Module, Object> {
+
+		private ModuleInjector() {}
+
+		@Override
+		@SuppressWarnings("unchecked")
+		protected Object getValueForField(Field field) {
+			if (field.getType() == Module.class)
+				return null;
+
+			Module module = getModule((Class<? extends Module>) field.getType());
+			if (module == null)
+				throw new ImplementationMissingException("You need to add the module of type: '" + field.getType() + "' to one of your ModulePacks");
+
+			return module;
+		}
+
+		@Override
+		protected Field[] extractFieldsFromInstance(Class<?> injecteeType) {
+			return ART_Tools.getFieldsWithAnnotationAndTypeFromClassHierarchy(injecteeType, Object.class, null, null, Module.class);
+		}
+	}
+
+	private final ModuleInjector moduleInjector = new ModuleInjector();
 
 	private OnModuleInitializedListener moduleInitializedListener;
 
@@ -50,9 +80,13 @@ public class ModuleManager
 	protected ModuleManager() {
 	}
 
+	public final ModuleInjector getInjector() {
+		return moduleInjector;
+	}
+
 	@Override
 	public final <ModuleType extends Module> ModuleType getModule(Class<ModuleType> moduleType) {
-		return getModule(moduleType, false);
+		return getModule(moduleType, true);
 	}
 
 	final void setOrderedModules(Module[] orderedModules) {

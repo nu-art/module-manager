@@ -20,12 +20,14 @@
 
 package com.nu.art.modular.core;
 
+import com.nu.art.modular.interfaces.ModuleManagerDelegator;
+
 /**
  * Created by TacB0sS on 08-Oct 2016.
  */
 
 public abstract class ModuleItem
-		implements com.nu.art.modular.interfaces.ModuleManagerDelegator {
+		implements ModuleManagerDelegator {
 
 	private ModuleManager moduleManager;
 

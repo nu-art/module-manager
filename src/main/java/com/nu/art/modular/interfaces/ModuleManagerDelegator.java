@@ -20,8 +20,10 @@
 
 package com.nu.art.modular.interfaces;
 
+import com.nu.art.modular.core.Module;
+
 @SuppressWarnings("rawtypes")
 public interface ModuleManagerDelegator {
 
-	<ModuleType extends com.nu.art.modular.core.Module> ModuleType getModule(Class<ModuleType> moduleType);
+	<ModuleType extends Module> ModuleType getModule(Class<ModuleType> moduleType);
 }

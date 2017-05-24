@@ -20,14 +20,19 @@
 
 package com.nu.art.modular.core;
 
+import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
 import com.nu.art.core.interfaces.ILogger;
 import com.nu.art.core.tools.ArrayTools;
+import com.nu.art.modular.interfaces.ModuleManagerDelegator;
+import com.nu.art.reflection.injector.Injector;
+import com.nu.art.reflection.tools.ART_Tools;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class ModuleManagerBuilder
-		implements com.nu.art.modular.interfaces.ModuleManagerDelegator {
+		implements ModuleManagerDelegator {
 
 	protected final ModuleManager moduleManager;
 
@@ -72,6 +77,10 @@ public class ModuleManagerBuilder
 
 		Module[] registeredModules = moduleManager.getOrderedModules();
 		validateModules(registeredModules);
+
+		for (Module registeredModule : registeredModules) {
+			moduleManager.getInjector().injectToInstance(registeredModule);
+		}
 
 		moduleManager.init();
 		for (Module module : registeredModules) {
