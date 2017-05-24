@@ -60,7 +60,7 @@ public abstract class Module
 	}
 
 	protected final <ListenerType> void dispatchModuleEvent(String message, Class<ListenerType> listenerType, Processor<ListenerType> processor) {
-		logInfo("Dispatching module event: " + message);
+		logInfo("Dispatch module event: " + message);
 		moduleManager.dispatchModuleEvent(message, listenerType, processor);
 	}
 
