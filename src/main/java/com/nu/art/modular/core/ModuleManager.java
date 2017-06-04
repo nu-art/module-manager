@@ -22,6 +22,7 @@ package com.nu.art.modular.core;
 
 import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
 import com.nu.art.core.generics.Processor;
+import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ import java.util.HashMap;
  */
 @SuppressWarnings("rawtypes")
 public class ModuleManager
-		implements com.nu.art.modular.interfaces.ModuleManagerDelegator {
+		implements ModuleManagerDelegator {
 
 	/**
 	 * Holds a references to all the module types which have registered to this main module,
@@ -75,7 +76,7 @@ public class ModuleManager
 	 * @param moduleType The module type to register with the Module Manager.
 	 */
 	@SuppressWarnings("unchecked")
-	protected final <_Module extends Module> _Module registerModule(Class<_Module> moduleType) {
+	final <_Module extends Module> _Module registerModule(Class<_Module> moduleType) {
 		_Module module = (_Module) registeredModules.get(moduleType);
 		if (module != null) {
 			return null;
