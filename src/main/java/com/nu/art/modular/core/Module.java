@@ -54,9 +54,9 @@ public abstract class Module
 	}
 
 	protected <Type extends ModuleItem> Type instantiateModuleItem(Class<Type> moduleItemType) {
-		Type type = ReflectiveTools.newInstance(moduleItemType);
-		type.setModuleManager(moduleManager);
-		return type;
+		Type moduleItem = ReflectiveTools.newInstance(moduleItemType);
+		moduleItem.setModuleManager(moduleManager);
+		return moduleItem;
 	}
 
 	protected final <ListenerType> void dispatchModuleEvent(String message, Class<ListenerType> listenerType, Processor<ListenerType> processor) {
