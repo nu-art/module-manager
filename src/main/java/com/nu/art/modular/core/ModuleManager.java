@@ -23,7 +23,6 @@ package com.nu.art.modular.core;
 import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
 import com.nu.art.core.generics.Processor;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
-import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 import com.nu.art.reflection.injector.Injector;
 import com.nu.art.reflection.tools.ART_Tools;
 import com.nu.art.reflection.tools.ReflectiveTools;
@@ -106,7 +105,7 @@ public class ModuleManager
 	private <ModuleType extends Module> ModuleType getModule(Class<ModuleType> moduleType, boolean throwException) {
 		ModuleType module = (ModuleType) registeredModules.get(moduleType);
 		if (module == null && throwException) {
-			throw new ImplementationMissingException("MUST add module of type: '" + moduleType.getName() + "' In your application module" + " " + "builder!!!");
+			throw new ImplementationMissingException("MUST add module of type: '" + moduleType.getName() + "' to one of your module packs");
 		}
 		return module;
 	}
