@@ -20,14 +20,17 @@
 
 package com.nu.art.modular.core;
 
+import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
 import com.nu.art.core.generics.Processor;
+import com.nu.art.core.tools.ArrayTools;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 import com.nu.art.reflection.injector.Injector;
 import com.nu.art.reflection.tools.ART_Tools;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -77,11 +80,29 @@ public class ModuleManager
 
 	private Module[] orderedModules = {};
 
+	public static ModuleManager ModuleManager;
+
 	protected ModuleManager() {
+		if (ModuleManager != null)
+			throw new BadImplementationException("THERE CAN ONLY BE ONE MODULE MANAGER IN A JVM!!");
+
+		ModuleManager = this;
 	}
 
 	public final ModuleInjector getInjector() {
 		return moduleInjector;
+	}
+
+	@SuppressWarnings("unchecked")
+	final <Type> Type[] getModulesAssignableFrom(Class<Type> classType) {
+		ArrayList<Type> modules = new ArrayList<>();
+		for (Module orderedModule : orderedModules) {
+			if (!classType.isAssignableFrom(orderedModule.getClass()))
+				continue;
+
+			modules.add((Type) orderedModule);
+		}
+		return ArrayTools.asArray(modules, classType);
 	}
 
 	@Override

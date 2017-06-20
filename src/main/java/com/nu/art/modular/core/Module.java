@@ -41,6 +41,10 @@ public abstract class Module
 		this.moduleManager = mainManager;
 	}
 
+	protected final <Type> Type[] getModulesAssignableFrom(Class<Type> classType) {
+		return moduleManager.getModulesAssignableFrom(classType);
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public <ModuleType extends Module> ModuleType getModule(Class<ModuleType> moduleType) {
