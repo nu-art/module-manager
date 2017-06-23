@@ -1,7 +1,5 @@
 /*
- * The module-manager project, is THE infrastructure that all my frameworks
- *  are based on, it allows encapsulation of logic where needed, and allow
- *  modules to converse without other design patterns limitations.
+ * The core of the core of all my projects!
  *
  * Copyright (C) 2017  Adam van der Kruk aka TacB0sS
  *
@@ -18,35 +16,13 @@
  * limitations under the License.
  */
 
-def group = 'com.nu.art.software'
-def artifact = 'module-manager'
-def version = '1.0.0'
 apply plugin: 'java'
-apply plugin: 'maven'
-
 
 tasks.withType(JavaCompile) {
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
 }
 
-//uploadArchives {
-//    repositories {
-//        mavenDeployer {
-//            def finalPath = 'file://' + LocalMavenRepoPath.toString()
-//            repository url: finalPath
-//            pom.groupId = group
-//            pom.artifactId = artifact
-//            pom.version = version
-//            pom.packaging = 'jar'
-//        }
-//    }
-//}
-
-dependencies {
-    compile project(':reflection')
-}
-
-jar {
-    archiveName = artifact + "-" + version + ".jar"
-}
+if (project.hasProperty("configureUploadJavaArtifact")) {
+    configureUploadJavaArtifact("com.nu-art-software",  "nu-art/${name}")
+};
