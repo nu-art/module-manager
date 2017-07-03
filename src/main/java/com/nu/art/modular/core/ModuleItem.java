@@ -20,6 +20,7 @@
 
 package com.nu.art.modular.core;
 
+import com.nu.art.belog.Logger;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 
 /**
@@ -27,6 +28,7 @@ import com.nu.art.modular.interfaces.ModuleManagerDelegator;
  */
 
 public abstract class ModuleItem
+		extends Logger
 		implements ModuleManagerDelegator {
 
 	private ModuleManager moduleManager;

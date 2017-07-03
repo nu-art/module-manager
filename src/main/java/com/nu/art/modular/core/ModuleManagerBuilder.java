@@ -20,15 +20,10 @@
 
 package com.nu.art.modular.core;
 
-import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
-import com.nu.art.core.interfaces.ILogger;
 import com.nu.art.core.tools.ArrayTools;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
-import com.nu.art.reflection.injector.Injector;
-import com.nu.art.reflection.tools.ART_Tools;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class ModuleManagerBuilder
@@ -90,10 +85,7 @@ public class ModuleManagerBuilder
 		return moduleManager;
 	}
 
-	protected void setupModule(Module module) {}
-
-	protected final void setLogger(Module module, ILogger logger) {
-		module.setLogger(logger);
+	protected void setupModule(Module module) {
 	}
 
 	@SuppressWarnings("unused")

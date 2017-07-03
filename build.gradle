@@ -29,4 +29,5 @@ if (project.hasProperty("configureUploadJavaArtifact")) {
 
 dependencies {
     compile project(':reflection')
+    compile project(path: ':belog')
 }

@@ -20,22 +20,17 @@
 
 package com.nu.art.modular.core;
 
+import com.nu.art.belog.Logger;
 import com.nu.art.core.generics.Processor;
-import com.nu.art.core.interfaces.ILogger;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
 @SuppressWarnings("rawtypes")
 public abstract class Module
-		implements ModuleManagerDelegator, ILogger {
-
-	private ILogger logger;
+		extends Logger
+		implements ModuleManagerDelegator {
 
 	private ModuleManager moduleManager;
-
-	final void setLogger(ILogger logger) {
-		this.logger = logger;
-	}
 
 	final void setMainManager(ModuleManager mainManager) {
 		this.moduleManager = mainManager;
@@ -73,124 +68,4 @@ public abstract class Module
 	protected void printDetails() {}
 
 	protected void validateModule(ValidationResult result) {}
-
-	@Override
-	public void logVerbose(String verbose) {
-		if (logger != null)
-			logger.logVerbose(verbose);
-	}
-
-	@Override
-	public void logVerbose(String verbose, Object... params) {
-		if (logger != null)
-			logger.logVerbose(verbose, params);
-	}
-
-	@Override
-	public void logVerbose(Throwable e) {
-		if (logger != null)
-			logger.logVerbose(e);
-	}
-
-	@Override
-	public void logVerbose(String verbose, Throwable e) {
-		if (logger != null)
-			logger.logVerbose(verbose, e);
-	}
-
-	@Override
-	public void logDebug(String debug) {
-		if (logger != null)
-			logger.logDebug(debug);
-	}
-
-	@Override
-	public void logDebug(String debug, Object... params) {
-		if (logger != null)
-			logger.logDebug(debug, params);
-	}
-
-	@Override
-	public void logDebug(Throwable e) {
-		if (logger != null)
-			logger.logDebug(e);
-	}
-
-	@Override
-	public void logDebug(String debug, Throwable e) {
-		if (logger != null)
-			logger.logDebug(debug, e);
-	}
-
-	@Override
-	public void logInfo(String info) {
-		if (logger != null)
-			logger.logInfo(info);
-	}
-
-	@Override
-	public void logInfo(String info, Object... params) {
-		if (logger != null)
-			logger.logInfo(info, params);
-	}
-
-	@Override
-	public void logInfo(Throwable e) {
-		if (logger != null)
-			logger.logInfo(e);
-	}
-
-	@Override
-	public void logInfo(String info, Throwable e) {
-		if (logger != null)
-			logger.logInfo(info, e);
-	}
-
-	@Override
-	public void logWarning(String warning) {
-		if (logger != null)
-			logger.logWarning(warning);
-	}
-
-	@Override
-	public void logWarning(String warning, Object... params) {
-		if (logger != null)
-			logger.logWarning(warning, params);
-	}
-
-	@Override
-	public void logWarning(Throwable e) {
-		if (logger != null)
-			logger.logWarning(e);
-	}
-
-	@Override
-	public void logWarning(String warning, Throwable e) {
-		if (logger != null)
-			logger.logWarning(warning, e);
-	}
-
-	@Override
-	public void logError(String error) {
-		if (logger != null)
-			logger.logError(error);
-	}
-
-	@Override
-	public void logError(String error, Object... params) {
-		if (logger != null)
-			logger.logError(error, params);
-	}
-
-	@Override
-	public void logError(Throwable e) {
-		if (logger != null)
-			logger.logError(e);
-	}
-
-	@Override
-	public void logError(String error, Throwable e) {
-		if (logger != null)
-			logger.logError(error, e);
-	}
 }
