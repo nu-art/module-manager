@@ -22,6 +22,7 @@ package com.nu.art.modular.core;
 
 import com.nu.art.belog.Logger;
 import com.nu.art.core.generics.Processor;
+import com.nu.art.core.tools.ArrayTools;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
@@ -34,6 +35,17 @@ public abstract class Module
 
 	final void setMainManager(ModuleManager mainManager) {
 		this.moduleManager = mainManager;
+	}
+
+	@SuppressWarnings("unchecked")
+	Class<? extends Module>[] keys = new Class[]{};
+
+	protected Module() {
+		addKey(getClass());
+	}
+
+	protected final void addKey(Class<? extends Module> key) {
+		keys = ArrayTools.appendElement(keys, key);
 	}
 
 	protected final <Type> Type[] getModulesAssignableFrom(Class<Type> classType) {

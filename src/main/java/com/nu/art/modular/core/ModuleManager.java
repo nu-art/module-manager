@@ -20,6 +20,7 @@
 
 package com.nu.art.modular.core;
 
+import com.nu.art.belog.Logger;
 import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
 import com.nu.art.core.generics.Processor;
@@ -38,6 +39,7 @@ import java.util.HashMap;
  */
 @SuppressWarnings("rawtypes")
 public class ModuleManager
+		extends Logger
 		implements ModuleManagerDelegator {
 
 	public interface OnModuleInitializedListener {
@@ -148,13 +150,18 @@ public class ModuleManager
 	@SuppressWarnings("unchecked")
 	final <_Module extends Module> _Module registerModule(Class<_Module> moduleType) {
 		_Module module = (_Module) registeredModules.get(moduleType);
-		if (module != null) {
+		if (module != null)
 			return null;
-		}
+
 		module = ReflectiveTools.newInstance(moduleType);
 		module.setMainManager(this);
 
-		registeredModules.put(moduleType, module);
+		for (Class<? extends Module> key : module.keys) {
+			Module olderModule = registeredModules.put(key, module);
+			if (olderModule != null)
+				logWarning("Shared Module key " + key + " between modules: " + olderModule.getClass() + " and " + module.getClass());
+		}
+
 		return module;
 	}
 
