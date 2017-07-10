@@ -25,9 +25,9 @@ tasks.withType(JavaCompile) {
 
 if (project.hasProperty("configureUploadJavaArtifact")) {
     configureUploadJavaArtifact("com.nu-art-software", "nu-art/${name}")
-};
+}
 
 dependencies {
-    compile project(':reflection')
-    compile project(path: ':belog')
+    compile(resolveDependency('reflection', 'com.nu-art-software', "${DEFAULT_DEPENDENCY_VERSION}"))
+    compile(resolveDependency('belog', 'com.nu-art-software', "${DEFAULT_DEPENDENCY_VERSION}"))
 }
