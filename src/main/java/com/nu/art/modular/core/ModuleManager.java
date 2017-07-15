@@ -80,6 +80,8 @@ public class ModuleManager
 	 */
 	private HashMap<Class<? extends Module>, Module> registeredModules = new HashMap<>();
 
+	private EventDispatcher eventDispatcher = new EventDispatcher("ModulesEventDispatcher");
+
 	private Module[] orderedModules = {};
 
 	public static ModuleManager ModuleManager;
@@ -114,6 +116,7 @@ public class ModuleManager
 
 	final void setOrderedModules(Module[] orderedModules) {
 		this.orderedModules = orderedModules;
+		eventDispatcher.setListeners(orderedModules);
 	}
 
 	protected final Module[] getOrderedModules() {
@@ -169,18 +172,6 @@ public class ModuleManager
 
 	@SuppressWarnings("unchecked")
 	protected <ParentType> void dispatchModuleEvent(String message, Class<ParentType> parentType, Processor<ParentType> processor) {
-		for (Module module : orderedModules) {
-			if (!parentType.isAssignableFrom(module.getClass()))
-				continue;
-
-			try {
-				processor.process((ParentType) module);
-			} catch (Throwable t) {
-				String errorMessage = "Error while processing module event:\n   parentType: " + parentType.getSimpleName() + "\n   moduleType: " + module.getClass()
-						.getSimpleName();
-				System.err.print(errorMessage);
-				t.printStackTrace();
-			}
-		}
+		eventDispatcher.dispatchEvent(parentType, processor);
 	}
 }
