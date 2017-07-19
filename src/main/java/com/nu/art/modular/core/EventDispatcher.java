@@ -57,8 +57,8 @@ public class EventDispatcher
 
 			try {
 				processor.process((ParentType) module);
-			} catch (Throwable t) {
-				logError("Error while processing event:\n + eventType:" + eventType.getSimpleName() + "\n listenerType:" + module.getClass(), t);
+			} catch (RuntimeException t) {
+				throw new RuntimeException("Error while processing event:\n + eventType:" + eventType.getSimpleName() + "\n listenerType:" + module.getClass(), t);
 			}
 		}
 	}
