@@ -21,6 +21,7 @@
 package com.nu.art.modular.core;
 
 import com.nu.art.belog.Logger;
+import com.nu.art.core.generics.Processor;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 
 /**
@@ -35,6 +36,11 @@ public abstract class ModuleItem
 
 	protected abstract void init();
 
+	public final <ListenerType> void dispatchModuleEvent(String message, final Class<ListenerType> listenerType, final Processor<ListenerType> processor) {
+		logDebug("Dispatching Module Event: " + message);
+		moduleManager.dispatchModuleEvent(message, listenerType, processor);
+	}
+
 	@Override
 	public <ModuleType extends Module> ModuleType getModule(Class<ModuleType> moduleType) {
 		return moduleManager.getModule(moduleType);
@@ -44,3 +50,4 @@ public abstract class ModuleItem
 		this.moduleManager = moduleManager;
 	}
 }
+
