@@ -1,5 +1,7 @@
 /*
- * The core of the core of all my projects!
+ * The module-manager project, is THE infrastructure that all my frameworks
+ *  are based on, it allows encapsulation of logic where needed, and allow
+ *  modules to converse without other design patterns limitations.
  *
  * Copyright (C) 2017  Adam van der Kruk aka TacB0sS
  *
