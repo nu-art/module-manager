@@ -98,7 +98,7 @@ public class ModuleManager
 	}
 
 	@SuppressWarnings("unchecked")
-	protected final <Type> Type[] getModulesAssignableFrom(Class<Type> classType) {
+	public final <Type> Type[] getModulesAssignableFrom(Class<Type> classType) {
 		ArrayList<Type> modules = new ArrayList<>();
 		for (Module orderedModule : orderedModules) {
 			if (!classType.isAssignableFrom(orderedModule.getClass()))
