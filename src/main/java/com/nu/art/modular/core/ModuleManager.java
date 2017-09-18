@@ -23,6 +23,7 @@ package com.nu.art.modular.core;
 import com.nu.art.belog.Logger;
 import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
+import com.nu.art.core.exceptions.runtime.WhoCalledThis;
 import com.nu.art.core.generics.Processor;
 import com.nu.art.core.tools.ArrayTools;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
@@ -54,7 +55,7 @@ public class ModuleManager
 
 		@Override
 		@SuppressWarnings("unchecked")
-		protected Object getValueForField(Field field) {
+		protected Object getValueForField(Object instance, Field field) {
 			if (field.getType() == Module.class)
 				return null;
 
@@ -172,6 +173,6 @@ public class ModuleManager
 
 	@SuppressWarnings("unchecked")
 	protected <ParentType> void dispatchModuleEvent(String message, Class<ParentType> parentType, Processor<ParentType> processor) {
-		eventDispatcher.dispatchEvent(parentType, processor);
+		eventDispatcher.dispatchEvent(new WhoCalledThis("dispatching: " + message), parentType, processor);
 	}
 }

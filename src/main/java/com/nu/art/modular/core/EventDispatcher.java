@@ -21,6 +21,7 @@
 package com.nu.art.modular.core;
 
 import com.nu.art.belog.Logger;
+import com.nu.art.core.exceptions.runtime.WhoCalledThis;
 import com.nu.art.core.generics.Processor;
 import com.nu.art.core.tools.ArrayTools;
 
@@ -50,7 +51,7 @@ public class EventDispatcher
 	}
 
 	@SuppressWarnings("unchecked")
-	public <ParentType> void dispatchEvent(Class<ParentType> eventType, Processor<ParentType> processor) {
+	public <ParentType> void dispatchEvent(WhoCalledThis whoCalledThis, Class<ParentType> eventType, Processor<ParentType> processor) {
 		for (Object module : listeners) {
 			if (!eventType.isAssignableFrom(module.getClass()))
 				continue;
@@ -58,6 +59,9 @@ public class EventDispatcher
 			try {
 				processor.process((ParentType) module);
 			} catch (RuntimeException t) {
+				if (whoCalledThis != null)
+					logError(whoCalledThis);
+
 				throw new RuntimeException("Error while processing event:\n + eventType:" + eventType.getSimpleName() + "\n listenerType:" + module.getClass(), t);
 			}
 		}
