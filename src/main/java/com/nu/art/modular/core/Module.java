@@ -26,12 +26,16 @@ import com.nu.art.core.tools.ArrayTools;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
+import java.lang.reflect.Field;
+
 @SuppressWarnings("rawtypes")
 public abstract class Module
 		extends Logger
 		implements ModuleManagerDelegator {
 
 	private ModuleManager moduleManager;
+
+	private Class<?> iClass;
 
 	final void setMainManager(ModuleManager mainManager) {
 		this.moduleManager = mainManager;
@@ -46,6 +50,10 @@ public abstract class Module
 
 	protected final void addKey(Class<? extends Module> key) {
 		keys = ArrayTools.appendElement(keys, key);
+	}
+
+	protected final void setInterface(Class<?> iClass) {
+		this.iClass = iClass;
 	}
 
 	protected final <Type> Type[] getModulesAssignableFrom(Class<Type> classType) {
@@ -80,4 +88,31 @@ public abstract class Module
 	protected void printDetails() {}
 
 	protected void validateModule(ValidationResult result) {}
+
+	final void assignToDefaultInterface() {
+		if (iClass == null)
+			iClass = deriveiClassFromMyself();
+
+		if (iClass == null)
+			return;
+
+		try {
+			Field field = iClass.getField("_" + getClass().getSimpleName());
+			field.setAccessible(true);
+			field.set(null, this);
+			field.setAccessible(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private Class<?> deriveiClassFromMyself() {
+		Class<?>[] classes = getClass().getClasses();
+		for (Class<?> aClass : classes) {
+			if (aClass.getSimpleName().equals("I" + getClass().getSimpleName()))
+				return aClass;
+		}
+
+		return null;
+	}
 }

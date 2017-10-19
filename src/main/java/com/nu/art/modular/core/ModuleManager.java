@@ -139,6 +139,10 @@ public class ModuleManager
 
 	final void init() {
 		for (Module module : orderedModules) {
+			module.assignToDefaultInterface();
+		}
+
+		for (Module module : orderedModules) {
 			module.init();
 
 			if (moduleInitializedListener == null)
