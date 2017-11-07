@@ -117,7 +117,9 @@ public class ModuleManager
 
 	final void setOrderedModules(Module[] orderedModules) {
 		this.orderedModules = orderedModules;
-		eventDispatcher.setListeners(orderedModules);
+		for (Module orderedModule : orderedModules) {
+			eventDispatcher.addListener(orderedModule);
+		}
 	}
 
 	protected final Module[] getOrderedModules() {

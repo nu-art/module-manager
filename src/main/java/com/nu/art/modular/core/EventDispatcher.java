@@ -21,9 +21,12 @@
 package com.nu.art.modular.core;
 
 import com.nu.art.belog.Logger;
+import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.core.exceptions.runtime.WhoCalledThis;
 import com.nu.art.core.generics.Processor;
-import com.nu.art.core.tools.ArrayTools;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * Created by TacB0sS on 16-Jul 2017.
@@ -32,38 +35,49 @@ import com.nu.art.core.tools.ArrayTools;
 public class EventDispatcher
 		extends Logger {
 
-	private Object[] listeners = {};
+	ArrayList<WeakReference<Object>> toBeRemoved = new ArrayList<>();
+	ArrayList<WeakReference<Object>> _listeners = new ArrayList<>();
+
+	private Thread ownerThread;
 
 	public EventDispatcher(String name) {
 		setTag(name);
 	}
 
 	public final void addListener(Object listener) {
-		listeners = ArrayTools.appendElement(listeners, listener);
-	}
-
-	public final void setListeners(Object[] listeners) {
-		this.listeners = listeners;
-	}
-
-	public final void removeListener(Object listener) {
-		listeners = ArrayTools.removeElement(listeners, listener);
+		_listeners.add(new WeakReference<>(listener));
 	}
 
 	@SuppressWarnings("unchecked")
 	public <ParentType> void dispatchEvent(WhoCalledThis whoCalledThis, Class<ParentType> eventType, Processor<ParentType> processor) {
-		for (Object module : listeners) {
-			if (!eventType.isAssignableFrom(module.getClass()))
+		if (ownerThread == null)
+			ownerThread = Thread.currentThread();
+
+		if (Thread.currentThread() != ownerThread)
+			throw new BadImplementationException("Dispatching event must be done on a single thread, owner thread: " + ownerThread
+					.getName() + ", calling thread: " + Thread.currentThread().getName());
+
+		for (WeakReference<Object> _listener : _listeners) {
+			Object listener = _listener.get();
+			if (listener == null) {
+				toBeRemoved.add(_listener);
+				continue;
+			}
+
+			if (!eventType.isAssignableFrom(listener.getClass()))
 				continue;
 
 			try {
-				processor.process((ParentType) module);
+				processor.process((ParentType) listener);
 			} catch (RuntimeException t) {
 				if (whoCalledThis != null)
 					logError(whoCalledThis);
 
-				throw new RuntimeException("Error while processing event:\n + eventType:" + eventType.getSimpleName() + "\n listenerType:" + module.getClass(), t);
+				throw new RuntimeException("Error while processing event:\n + eventType:" + eventType.getSimpleName() + "\n listenerType:" + listener.getClass(), t);
 			}
 		}
+
+		_listeners.removeAll(toBeRemoved);
+		toBeRemoved.clear();
 	}
 }
