@@ -24,6 +24,7 @@ import com.nu.art.belog.Logger;
 import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.core.exceptions.runtime.WhoCalledThis;
 import com.nu.art.core.generics.Processor;
+import com.nu.art.core.tools.ArrayTools;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -35,8 +36,10 @@ import java.util.ArrayList;
 public class EventDispatcher
 		extends Logger {
 
-	ArrayList<WeakReference<Object>> toBeRemoved = new ArrayList<>();
-	ArrayList<WeakReference<Object>> _listeners = new ArrayList<>();
+	private ArrayList<WeakReference<Object>> toBeRemoved = new ArrayList<>();
+
+	@SuppressWarnings("unchecked")
+	private WeakReference<Object>[] _listeners = new WeakReference[0];
 
 	private Thread ownerThread;
 
@@ -45,7 +48,7 @@ public class EventDispatcher
 	}
 
 	public final void addListener(Object listener) {
-		_listeners.add(new WeakReference<>(listener));
+		_listeners = ArrayTools.appendElement(_listeners, new WeakReference<>(listener));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -77,7 +80,7 @@ public class EventDispatcher
 			}
 		}
 
-		_listeners.removeAll(toBeRemoved);
+		ArrayTools.removeElements(_listeners, toBeRemoved);
 		toBeRemoved.clear();
 	}
 }
