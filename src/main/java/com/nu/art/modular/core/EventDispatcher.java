@@ -60,10 +60,10 @@ public class EventDispatcher
 			throw new BadImplementationException("Dispatching event must be done on a single thread, owner thread: " + ownerThread
 					.getName() + ", calling thread: " + Thread.currentThread().getName());
 
-		for (WeakReference<Object> _listener : _listeners) {
-			Object listener = _listener.get();
+		for (WeakReference<Object> ref : _listeners) {
+			Object listener = ref.get();
 			if (listener == null) {
-				toBeRemoved.add(_listener);
+				toBeRemoved.add(ref);
 				continue;
 			}
 
@@ -80,7 +80,23 @@ public class EventDispatcher
 			}
 		}
 
-		ArrayTools.removeElements(_listeners, toBeRemoved);
+		_listeners = ArrayTools.removeElements(_listeners, toBeRemoved);
+		toBeRemoved.clear();
+	}
+
+	public void removeListener(Object listener) {
+		for (WeakReference<Object> ref : _listeners) {
+			if (ref.get() == null) {
+				toBeRemoved.add(ref);
+				continue;
+			}
+
+			if (ref.get() == listener) {
+				toBeRemoved.add(ref);
+			}
+		}
+
+		_listeners = ArrayTools.removeElements(_listeners, toBeRemoved);
 		toBeRemoved.clear();
 	}
 }
