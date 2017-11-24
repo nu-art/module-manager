@@ -51,12 +51,19 @@ public class EventDispatcher
 		_listeners = ArrayTools.appendElement(_listeners, new WeakReference<>(listener));
 	}
 
+	public final EventDispatcher own() {
+		if (ownerThread != null)
+			throw new BadImplementationException("This dispatcher is already owned by '" + ownerThread.getName() + "' and cannot be assigned to '" + Thread
+					.currentThread().getName() + "'");
+
+		ownerThread = Thread.currentThread();
+		return this;
+	}
+
 	@SuppressWarnings("unchecked")
 	public <ParentType> void dispatchEvent(WhoCalledThis whoCalledThis, Class<ParentType> eventType, Processor<ParentType> processor) {
-		if (ownerThread == null)
-			ownerThread = Thread.currentThread();
 
-		if (Thread.currentThread() != ownerThread)
+		if (ownerThread != null && Thread.currentThread() != ownerThread)
 			throw new BadImplementationException("Dispatching event must be done on a single thread, owner thread: " + ownerThread
 					.getName() + ", calling thread: " + Thread.currentThread().getName());
 
