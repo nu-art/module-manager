@@ -26,6 +26,7 @@ import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
 import com.nu.art.core.exceptions.runtime.WhoCalledThis;
 import com.nu.art.core.generics.Processor;
 import com.nu.art.core.tools.ArrayTools;
+import com.nu.art.modular.core.EventDispatcher.ProcessorGenericParamExtractor;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 import com.nu.art.reflection.injector.Injector;
 import com.nu.art.reflection.tools.ART_Tools;
@@ -81,16 +82,17 @@ public class ModuleManager
 	 */
 	private HashMap<Class<? extends Module>, Module> registeredModules = new HashMap<>();
 
-	private EventDispatcher eventDispatcher = new EventDispatcher("ModulesEventDispatcher");
+	private EventDispatcher eventDispatcher;
 
 	private Module[] orderedModules = {};
 
 	public static ModuleManager ModuleManager;
 
-	protected ModuleManager() {
+	protected ModuleManager(ProcessorGenericParamExtractor paramExtractor) {
 		if (ModuleManager != null)
 			throw new BadImplementationException("THERE CAN ONLY BE ONE MODULE MANAGER IN A JVM!!");
 
+		eventDispatcher = new EventDispatcher("ModulesEventDispatcher", paramExtractor);
 		ModuleManager = this;
 	}
 
@@ -178,7 +180,7 @@ public class ModuleManager
 	protected void onBuildCompleted() {}
 
 	@SuppressWarnings("unchecked")
-	protected <ParentType> void dispatchModuleEvent(String message, Class<ParentType> parentType, Processor<ParentType> processor) {
-		eventDispatcher.dispatchEvent(new WhoCalledThis("dispatching: " + message), parentType, processor);
+	protected <ParentType> void dispatchModuleEvent(String message, Processor<ParentType> processor) {
+		eventDispatcher.dispatchEvent(new WhoCalledThis("dispatching: " + message), processor);
 	}
 }

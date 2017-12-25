@@ -36,9 +36,9 @@ public abstract class ModuleItem
 
 	protected abstract void init();
 
-	public final <ListenerType> void dispatchModuleEvent(String message, final Class<ListenerType> listenerType, final Processor<ListenerType> processor) {
+	public final <ListenerType> void dispatchModuleEvent(String message, final Processor<ListenerType> processor) {
 		logDebug("Dispatching Module Event: " + message);
-		moduleManager.dispatchModuleEvent(message, listenerType, processor);
+		moduleManager.dispatchModuleEvent(message, processor);
 	}
 
 	@Override

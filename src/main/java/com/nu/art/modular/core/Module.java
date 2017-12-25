@@ -78,9 +78,9 @@ public abstract class Module
 		return moduleItem;
 	}
 
-	protected final <ListenerType> void dispatchModuleEvent(String message, Class<ListenerType> listenerType, Processor<ListenerType> processor) {
+	protected final <ListenerType> void dispatchModuleEvent(String message, Processor<ListenerType> processor) {
 		logInfo("Dispatch module event: " + message);
-		moduleManager.dispatchModuleEvent(message, listenerType, processor);
+		moduleManager.dispatchModuleEvent(message, processor);
 	}
 
 	protected abstract void init();

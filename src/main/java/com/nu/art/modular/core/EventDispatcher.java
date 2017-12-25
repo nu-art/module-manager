@@ -36,6 +36,11 @@ import java.util.ArrayList;
 public class EventDispatcher
 		extends Logger {
 
+	public interface ProcessorGenericParamExtractor {
+
+		<T> Class<T> extractGenericTypeFromProcessorTest(Processor<T> processor);
+	}
+
 	private ArrayList<WeakReference<Object>> toBeRemoved = new ArrayList<>();
 
 	@SuppressWarnings("unchecked")
@@ -43,7 +48,10 @@ public class EventDispatcher
 
 	private Thread ownerThread;
 
-	public EventDispatcher(String name) {
+	private final ProcessorGenericParamExtractor extractor;
+
+	public EventDispatcher(String name, ProcessorGenericParamExtractor extractor) {
+		this.extractor = extractor;
 		setTag(name);
 	}
 
@@ -61,12 +69,13 @@ public class EventDispatcher
 	}
 
 	@SuppressWarnings("unchecked")
-	public <ParentType> void dispatchEvent(WhoCalledThis whoCalledThis, Class<ParentType> eventType, Processor<ParentType> processor) {
+	public <EventType> void dispatchEvent(WhoCalledThis whoCalledThis, Processor<EventType> processor) {
 
 		if (ownerThread != null && Thread.currentThread() != ownerThread)
 			throw new BadImplementationException("Dispatching event must be done on a single thread, owner thread: " + ownerThread
 					.getName() + ", calling thread: " + Thread.currentThread().getName());
 
+		Class<EventType> eventType = extractor.extractGenericTypeFromProcessorTest(processor);
 		for (WeakReference<Object> ref : _listeners) {
 			Object listener = ref.get();
 			if (listener == null) {
@@ -78,7 +87,7 @@ public class EventDispatcher
 				continue;
 
 			try {
-				processor.process((ParentType) listener);
+				processor.process((EventType) listener);
 			} catch (RuntimeException t) {
 				if (whoCalledThis != null)
 					logError(whoCalledThis);

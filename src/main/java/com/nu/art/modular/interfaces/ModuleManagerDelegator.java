@@ -26,8 +26,9 @@ import com.nu.art.modular.core.Module;
 public interface ModuleManagerDelegator {
 
 	/**
-	 * @param moduleType The module type we want to get.
+	 * @param moduleType   The module type we want to get.
 	 * @param <ModuleType> The module Class type.
+	 *
 	 * @return The instance of the module of the specified type.
 	 */
 	<ModuleType extends Module> ModuleType getModule(Class<ModuleType> moduleType);
