@@ -60,9 +60,9 @@ public class ModuleManager
 			if (field.getType() == Module.class)
 				return null;
 
-			Module module = getModule((Class<? extends Module>) field.getType());
+			Module module = getModule((Class<? extends Module>) field.getType(), false);
 			if (module == null)
-				throw new ImplementationMissingException("You need to add the module of type: '" + field.getType() + "' to one of your ModulePacks");
+				throw new ImplementationMissingException("Cannot set module to field: " + field + "\n  You need to add the module of type: '" + field.getType() + "' to one of your ModulePacks");
 
 			return module;
 		}
