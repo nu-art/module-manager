@@ -36,9 +36,9 @@ import java.util.ArrayList;
 public class EventDispatcher
 		extends Logger {
 
-	public interface ProcessorGenericParamExtractor {
+	public interface GenericParamExtractor {
 
-		<T> Class<T> extractGenericTypeFromProcessorTest(Processor<T> processor);
+		<T> Class<T> extractGenericType(Object o, int index);
 	}
 
 	private ArrayList<WeakReference<Object>> toBeRemoved = new ArrayList<>();
@@ -48,9 +48,9 @@ public class EventDispatcher
 
 	private Thread ownerThread;
 
-	private final ProcessorGenericParamExtractor extractor;
+	private final GenericParamExtractor extractor;
 
-	public EventDispatcher(String name, ProcessorGenericParamExtractor extractor) {
+	public EventDispatcher(String name, GenericParamExtractor extractor) {
 		this.extractor = extractor;
 		setTag(name);
 	}
@@ -75,7 +75,7 @@ public class EventDispatcher
 			throw new BadImplementationException("Dispatching event must be done on a single thread, owner thread: " + ownerThread
 					.getName() + ", calling thread: " + Thread.currentThread().getName());
 
-		Class<EventType> eventType = extractor.extractGenericTypeFromProcessorTest(processor);
+		Class<EventType> eventType = extractor.extractGenericType(processor, 0);
 		for (WeakReference<Object> ref : _listeners) {
 			Object listener = ref.get();
 			if (listener == null) {

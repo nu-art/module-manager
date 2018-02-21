@@ -26,7 +26,7 @@ import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
 import com.nu.art.core.exceptions.runtime.WhoCalledThis;
 import com.nu.art.core.generics.Processor;
 import com.nu.art.core.tools.ArrayTools;
-import com.nu.art.modular.core.EventDispatcher.ProcessorGenericParamExtractor;
+import com.nu.art.modular.core.EventDispatcher.GenericParamExtractor;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 import com.nu.art.reflection.injector.Injector;
 import com.nu.art.reflection.tools.ART_Tools;
@@ -88,7 +88,7 @@ public class ModuleManager
 
 	public static ModuleManager ModuleManager;
 
-	protected ModuleManager(ProcessorGenericParamExtractor paramExtractor) {
+	protected ModuleManager(GenericParamExtractor paramExtractor) {
 		if (ModuleManager != null)
 			throw new BadImplementationException("THERE CAN ONLY BE ONE MODULE MANAGER IN A JVM!!");
 
