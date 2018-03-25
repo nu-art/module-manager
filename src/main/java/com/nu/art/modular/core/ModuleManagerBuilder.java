@@ -77,6 +77,7 @@ public class ModuleManagerBuilder
 			moduleManager.getInjector().injectToInstance(registeredModule);
 		}
 
+		moduleManager.onBuildPrepared();
 		moduleManager.init();
 		for (Module module : registeredModules) {
 			module.printDetails();
