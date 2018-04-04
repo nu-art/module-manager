@@ -30,8 +30,8 @@ import java.lang.reflect.Field;
 
 @SuppressWarnings("rawtypes")
 public abstract class Module
-		extends Logger
-		implements ModuleManagerDelegator {
+	extends Logger
+	implements ModuleManagerDelegator {
 
 	private ModuleManager moduleManager;
 
@@ -79,8 +79,7 @@ public abstract class Module
 	}
 
 	protected final <ListenerType> void dispatchModuleEvent(String message, Processor<ListenerType> processor) {
-		logInfo("Dispatch module event: " + message);
-		moduleManager.dispatchModuleEvent(message, processor);
+		moduleManager.dispatchModuleEvent(this, message, processor);
 	}
 
 	protected abstract void init();

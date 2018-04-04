@@ -23,8 +23,8 @@ package com.nu.art.modular.core;
 import com.nu.art.belog.Logger;
 import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
-import com.nu.art.core.exceptions.runtime.WhoCalledThis;
 import com.nu.art.core.generics.Processor;
+import com.nu.art.core.interfaces.ILogger;
 import com.nu.art.core.tools.ArrayTools;
 import com.nu.art.modular.core.EventDispatcher.GenericParamExtractor;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
@@ -41,8 +41,8 @@ import java.util.HashMap;
  */
 @SuppressWarnings("rawtypes")
 public class ModuleManager
-		extends Logger
-		implements ModuleManagerDelegator {
+	extends Logger
+	implements ModuleManagerDelegator {
 
 	public interface OnModuleInitializedListener {
 
@@ -50,7 +50,7 @@ public class ModuleManager
 	}
 
 	public final class ModuleInjector
-			extends Injector<Module, Object> {
+		extends Injector<Module, Object> {
 
 		private ModuleInjector() {}
 
@@ -180,7 +180,9 @@ public class ModuleManager
 	protected void onBuildCompleted() {}
 
 	@SuppressWarnings("unchecked")
-	protected <ParentType> void dispatchModuleEvent(String message, Processor<ParentType> processor) {
-		eventDispatcher.dispatchEvent(new WhoCalledThis("dispatching: " + message), processor);
+	protected <ParentType> void dispatchModuleEvent(ILogger originator, String message, Processor<ParentType> processor) {
+		if (originator != null)
+			originator.logInfo("Dispatching Module Event: " + message);
+		eventDispatcher.dispatchEvent(null, processor);
 	}
 }
