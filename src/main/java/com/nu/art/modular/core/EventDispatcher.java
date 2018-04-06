@@ -23,6 +23,7 @@ package com.nu.art.modular.core;
 import com.nu.art.belog.Logger;
 import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.core.exceptions.runtime.WhoCalledThis;
+import com.nu.art.core.generics.GenericParamExtractor;
 import com.nu.art.core.generics.Processor;
 import com.nu.art.core.tools.ArrayTools;
 
@@ -34,12 +35,7 @@ import java.util.ArrayList;
  */
 
 public class EventDispatcher
-		extends Logger {
-
-	public interface GenericParamExtractor {
-
-		<T> Class<T> extractGenericType(Object o, int index);
-	}
+	extends Logger {
 
 	private ArrayList<WeakReference<Object>> toBeRemoved = new ArrayList<>();
 
@@ -61,8 +57,8 @@ public class EventDispatcher
 
 	public final EventDispatcher own() {
 		if (ownerThread != null)
-			throw new BadImplementationException("This dispatcher is already owned by '" + ownerThread.getName() + "' and cannot be assigned to '" + Thread
-					.currentThread().getName() + "'");
+			throw new BadImplementationException("This dispatcher is already owned by '" + ownerThread.getName() + "' and cannot be assigned to '" + Thread.currentThread()
+			                                                                                                                                               .getName() + "'");
 
 		ownerThread = Thread.currentThread();
 		return this;
@@ -72,10 +68,11 @@ public class EventDispatcher
 	public <EventType> void dispatchEvent(WhoCalledThis whoCalledThis, Processor<EventType> processor) {
 
 		if (ownerThread != null && Thread.currentThread() != ownerThread)
-			throw new BadImplementationException("Dispatching event must be done on a single thread, owner thread: " + ownerThread
-					.getName() + ", calling thread: " + Thread.currentThread().getName());
+			throw new BadImplementationException("Dispatching event must be done on a single thread, owner thread: " + ownerThread.getName() + ", calling thread: " + Thread
+				.currentThread()
+				.getName());
 
-		Class<EventType> eventType = extractor.extractGenericType(processor, 0);
+		Class<EventType> eventType = extractor.extractGenericType(Processor.class, processor, 0);
 		for (WeakReference<Object> ref : _listeners) {
 			Object listener = ref.get();
 			if (listener == null) {

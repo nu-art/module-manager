@@ -32,4 +32,5 @@ if (project.hasProperty("configureUploadJavaArtifact")) {
 dependencies {
     _api(resolveDependency('reflection', 'com.nu-art-software', "${NU_ART_VERSION}"))
     _api(resolveDependency('belog', 'com.nu-art-software', "${NU_ART_VERSION}"))
+    compile 'junit:junit:4.12'
 }
