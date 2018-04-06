@@ -23,7 +23,7 @@ package com.nu.art.modular.exceptions;
 import com.nu.art.core.exceptions.RuntimeInternalException;
 
 public class ModuleNotSupportedException
-		extends RuntimeInternalException {
+	extends RuntimeInternalException {
 
 	private static final long serialVersionUID = -8217638105874287525L;
 

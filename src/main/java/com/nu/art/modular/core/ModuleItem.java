@@ -29,8 +29,8 @@ import com.nu.art.modular.interfaces.ModuleManagerDelegator;
  */
 
 public abstract class ModuleItem
-		extends Logger
-		implements ModuleManagerDelegator {
+	extends Logger
+	implements ModuleManagerDelegator {
 
 	private ModuleManager moduleManager;
 

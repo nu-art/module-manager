@@ -27,7 +27,7 @@ import com.nu.art.reflection.tools.ReflectiveTools;
 import java.util.ArrayList;
 
 public class ModuleManagerBuilder
-		implements ModuleManagerDelegator {
+	implements ModuleManagerDelegator {
 
 	protected final ModuleManager moduleManager;
 

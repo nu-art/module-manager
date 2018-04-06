@@ -53,8 +53,7 @@ public abstract class ModulesPack {
 		if (ArrayTools.contains(moduleTypes, moduleType))
 			return manager.getModule(moduleType);
 
-		throw new BadImplementationException("Cannot access module(" + moduleType.getSimpleName() + ") that was not defined in this pack(" + getClass()
-				.getSimpleName() + ").");
+		throw new BadImplementationException("Cannot access module(" + moduleType.getSimpleName() + ") that was not defined in this pack(" + getClass().getSimpleName() + ").");
 	}
 
 	protected void init() {}
