@@ -18,9 +18,13 @@
  * limitations under the License.
  */
 
-applyJavaLibrary("com.nu-art-software", "nu-art")
+applyJavaLibrary()
 
 dependencies {
     api(resolveDependency('reflection', 'com.nu-art-software', "${NU_ART_VERSION}"))
     api(resolveDependency('belog', 'com.nu-art-software', "${NU_ART_VERSION}"))
+}
+
+if (project.hasProperty("addTask_DeployJavaArtifactToCentral")) {
+    addTask_DeployJavaArtifactToCentral("com.nu-art-software", "nu-art")
 }
