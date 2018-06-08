@@ -75,6 +75,7 @@ public abstract class Module
 	protected <Type extends ModuleItem> Type instantiateModuleItem(Class<Type> moduleItemType) {
 		Type moduleItem = ReflectiveTools.newInstance(moduleItemType);
 		moduleItem.setModuleManager(moduleManager);
+		moduleManager.getInjector().injectToInstance(moduleItem);
 		return moduleItem;
 	}
 
