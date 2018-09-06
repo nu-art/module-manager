@@ -53,7 +53,7 @@ public abstract class ModuleItem
 		moduleManager.prepareModuleItem(this);
 	}
 
-	protected final void dispose() {
+	protected final void release() {
 		moduleManager.disposeModuleItem(this);
 	}
 }
