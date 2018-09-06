@@ -48,5 +48,13 @@ public abstract class ModuleItem
 	final void setModuleManager(ModuleManager moduleManager) {
 		this.moduleManager = moduleManager;
 	}
+
+	final void prepare() {
+		moduleManager.prepareModuleItem(this);
+	}
+
+	protected final void dispose() {
+		moduleManager.disposeModuleItem(this);
+	}
 }
 

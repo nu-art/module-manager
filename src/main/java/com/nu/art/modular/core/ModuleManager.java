@@ -193,6 +193,15 @@ public class ModuleManager
 
 	protected void onBuildCompleted() {}
 
+	final void prepareModuleItem(ModuleItem moduleItem) {
+		getInjector().injectToInstance(moduleItem);
+		eventDispatcher.addListener(moduleItem);
+	}
+
+	final void disposeModuleItem(ModuleItem moduleItem) {
+		eventDispatcher.removeListener(moduleItem);
+	}
+
 	@SuppressWarnings("unchecked")
 	protected <ParentType> void dispatchModuleEvent(ILogger originator, String message, Processor<ParentType> processor) {
 		if (originator != null)
