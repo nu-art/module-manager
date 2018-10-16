@@ -66,13 +66,14 @@ public class EventDispatcher
 
 	@SuppressWarnings("unchecked")
 	public <EventType> void dispatchEvent(WhoCalledThis whoCalledThis, Processor<EventType> processor) {
-
-		if (ownerThread != null && Thread.currentThread() != ownerThread)
-			throw new BadImplementationException("Dispatching event must be done on a single thread, owner thread: " + ownerThread.getName() + ", calling thread: " + Thread
-				.currentThread()
-				.getName());
-
+		verifyThread();
 		Class<EventType> eventType = extractor.extractGenericType(Processor.class, processor, 0);
+		dispatchEvent(whoCalledThis, eventType, processor);
+	}
+
+	public <EventType> void dispatchEvent(WhoCalledThis whoCalledThis, Class<EventType> eventType, Processor<EventType> processor) {
+		verifyThread();
+
 		for (WeakReference<Object> ref : _listeners) {
 			Object listener = ref.get();
 			if (listener == null) {
@@ -95,6 +96,13 @@ public class EventDispatcher
 
 		_listeners = ArrayTools.removeElements(_listeners, toBeRemoved);
 		toBeRemoved.clear();
+	}
+
+	private void verifyThread() {
+		if (ownerThread != null && Thread.currentThread() != ownerThread)
+			throw new BadImplementationException("Dispatching event must be done on a single thread, owner thread: " + ownerThread.getName() + ", calling thread: " + Thread
+				.currentThread()
+				.getName());
 	}
 
 	public void removeListener(Object listener) {

@@ -203,9 +203,9 @@ public class ModuleManager
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <ParentType> void dispatchModuleEvent(ILogger originator, String message, Processor<ParentType> processor) {
+	protected <ListenerType> void dispatchModuleEvent(ILogger originator, String message, Class<ListenerType> listenerType, Processor<ListenerType> processor) {
 		if (originator != null)
 			originator.logInfo("Dispatching Module Event: " + message);
-		eventDispatcher.dispatchEvent(null, processor);
+		eventDispatcher.dispatchEvent(null, listenerType, processor);
 	}
 }
