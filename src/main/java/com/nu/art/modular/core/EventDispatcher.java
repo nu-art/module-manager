@@ -71,6 +71,7 @@ public class EventDispatcher
 		dispatchEvent(whoCalledThis, eventType, processor);
 	}
 
+	@SuppressWarnings("unchecked")
 	public <EventType> void dispatchEvent(WhoCalledThis whoCalledThis, Class<EventType> eventType, Processor<EventType> processor) {
 		verifyThread();
 
