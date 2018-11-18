@@ -102,6 +102,10 @@ public class ModuleManager
 
 	public static ModuleManager ModuleManager;
 
+	protected ModuleManager() {
+		this(GenericParamExtractor._GenericParamExtractor);
+	}
+
 	protected ModuleManager(GenericParamExtractor paramExtractor) {
 		if (ModuleManager != null)
 			throw new BadImplementationException("THERE CAN ONLY BE ONE MODULE MANAGER IN A JVM!!");
@@ -203,7 +207,7 @@ public class ModuleManager
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <ListenerType> void dispatchModuleEvent(ILogger originator, String message, Class<ListenerType> listenerType, Processor<ListenerType> processor) {
+	public <ListenerType> void dispatchModuleEvent(ILogger originator, String message, Class<ListenerType> listenerType, Processor<ListenerType> processor) {
 		if (originator != null)
 			originator.logInfo("Dispatching Module Event: " + message);
 		eventDispatcher.dispatchEvent(null, listenerType, processor);

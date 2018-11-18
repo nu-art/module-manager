@@ -21,35 +21,46 @@
 package com.nu.art.modular.core;
 
 import com.nu.art.core.tools.ArrayTools;
-import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
 import java.util.ArrayList;
 
-public class ModuleManagerBuilder
-	implements ModuleManagerDelegator {
+public class ModuleManagerBuilder {
 
-	protected final ModuleManager moduleManager;
+	private Class<? extends ModuleManager> managerType = ModuleManager.class;
 
-	private Class<? extends ModulesPack>[] modulesPacksTypes;
+	private ArrayList<ModulesPack> modulePacks = new ArrayList<>();
 
-	public ModuleManagerBuilder(Class<? extends ModuleManager> managerType) {
-		moduleManager = ReflectiveTools.newInstance(managerType);
+	public ModuleManagerBuilder() {
 	}
 
-	protected final void setModulesPacksTypes(Class<? extends ModulesPack>[] modulesPacksTypes) {
-		this.modulesPacksTypes = modulesPacksTypes;
+	public final ModuleManagerBuilder setModuleManagerType(Class<? extends ModuleManager> managerType) {
+		this.managerType = managerType;
+		return this;
 	}
 
-	public final ModuleManager buildMainManager() {
+	@SuppressWarnings("unchecked")
+	public final ModuleManagerBuilder addModulePacks(Class<? extends ModulesPack>... modulePacks) {
+		for (Class<? extends ModulesPack> packType : modulePacks) {
+			ModulesPack pack = ReflectiveTools.newInstance(packType);
+			this.modulePacks.add(pack);
+		}
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public final ModuleManagerBuilder addModules(Class<? extends Module>... modules) {
+		this.modulePacks.add(new ModulesPack(modules));
+		return this;
+	}
+
+	public final ModuleManager build() {
+		ModuleManager moduleManager = ReflectiveTools.newInstance(managerType);
 		ArrayList<Class<? extends Module>> modulesTypes = new ArrayList<>();
-		ArrayList<ModulesPack> modulesPacks = new ArrayList<>();
 
 		ArrayList<Module> orderedModules = new ArrayList<>();
-		for (Class<? extends ModulesPack> packType : modulesPacksTypes) {
-			ModulesPack pack = ReflectiveTools.newInstance(packType);
-			modulesPacks.add(pack);
 
+		for (ModulesPack pack : modulePacks) {
 			pack.setManager(moduleManager);
 			for (Class<? extends Module> moduleType : pack.getModuleTypes()) {
 				if (modulesTypes.contains(moduleType))
@@ -64,9 +75,10 @@ public class ModuleManagerBuilder
 				setupModule(module);
 			}
 		}
+
 		moduleManager.setOrderedModules(ArrayTools.asArray(orderedModules, Module.class));
 
-		for (ModulesPack pack : modulesPacks) {
+		for (ModulesPack pack : modulePacks) {
 			pack.init();
 		}
 
@@ -82,6 +94,7 @@ public class ModuleManagerBuilder
 		for (Module module : registeredModules) {
 			module.printDetails();
 		}
+
 		moduleManager.onBuildCompleted();
 		return moduleManager;
 	}
@@ -102,10 +115,5 @@ public class ModuleManagerBuilder
 
 	@SuppressWarnings("unused")
 	protected void postInit(Module[] allRegisteredModuleInstances) {
-	}
-
-	@Override
-	public <ModuleType extends Module> ModuleType getModule(Class<ModuleType> moduleType) {
-		return moduleManager.getModule(moduleType);
 	}
 }

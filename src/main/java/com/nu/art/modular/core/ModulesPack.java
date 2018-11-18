@@ -29,7 +29,7 @@ import com.nu.art.core.tools.ArrayTools;
  * <br>
  * Each ModulePack is defined by a list of {@link Module}s which are provided in the intialization of the application.
  */
-public abstract class ModulesPack {
+public class ModulesPack {
 
 	private final Class<? extends Module>[] moduleTypes;
 
