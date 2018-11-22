@@ -27,16 +27,9 @@ import java.util.ArrayList;
 
 public class ModuleManagerBuilder {
 
-	private Class<? extends ModuleManager> managerType = ModuleManager.class;
-
 	private ArrayList<ModulesPack> modulePacks = new ArrayList<>();
 
 	public ModuleManagerBuilder() {
-	}
-
-	public final ModuleManagerBuilder setModuleManagerType(Class<? extends ModuleManager> managerType) {
-		this.managerType = managerType;
-		return this;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -54,8 +47,7 @@ public class ModuleManagerBuilder {
 		return this;
 	}
 
-	public final ModuleManager build() {
-		ModuleManager moduleManager = ReflectiveTools.newInstance(managerType);
+	public final ModuleManager build(ModuleManager moduleManager) {
 		ArrayList<Class<? extends Module>> modulesTypes = new ArrayList<>();
 
 		ArrayList<Module> orderedModules = new ArrayList<>();

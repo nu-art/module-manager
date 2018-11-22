@@ -102,7 +102,7 @@ public class ModuleManager
 
 	public static ModuleManager ModuleManager;
 
-	protected ModuleManager() {
+	public ModuleManager() {
 		this(GenericParamExtractor._GenericParamExtractor);
 	}
 
