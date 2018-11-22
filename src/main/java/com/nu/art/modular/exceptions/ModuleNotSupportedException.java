@@ -20,6 +20,7 @@
 
 package com.nu.art.modular.exceptions;
 
+
 public class ModuleNotSupportedException
 	extends RuntimeException {
 
