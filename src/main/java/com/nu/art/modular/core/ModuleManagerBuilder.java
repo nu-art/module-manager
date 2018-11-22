@@ -47,6 +47,10 @@ public class ModuleManagerBuilder {
 		return this;
 	}
 
+	public final ModuleManager build() {
+		return build(new ModuleManager());
+	}
+
 	public final ModuleManager build(ModuleManager moduleManager) {
 		ArrayList<Class<? extends Module>> modulesTypes = new ArrayList<>();
 
