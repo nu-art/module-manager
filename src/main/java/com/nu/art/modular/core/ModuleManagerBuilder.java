@@ -90,9 +90,9 @@ public class ModuleManagerBuilder
 		moduleManager.onBuildPrepared();
 		moduleManager.init();
 		for (Module module : registeredModules) {
-			logInfo("----------- " + getClass().getSimpleName() + " ------------");
+			logInfo("----------- " + module.getClass().getSimpleName() + " ------------");
 			module.printDetails();
-			logInfo("-------- End of " + getClass().getSimpleName() + " --------");
+			logInfo("-------- End of " + module.getClass().getSimpleName() + " --------");
 		}
 
 		moduleManager.onBuildCompleted();
