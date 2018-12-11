@@ -20,12 +20,14 @@
 
 package com.nu.art.modular.core;
 
+import com.nu.art.belog.Logger;
 import com.nu.art.core.tools.ArrayTools;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
 import java.util.ArrayList;
 
-public class ModuleManagerBuilder {
+public class ModuleManagerBuilder
+	extends Logger {
 
 	private ArrayList<ModulesPack> modulePacks = new ArrayList<>();
 
@@ -88,7 +90,9 @@ public class ModuleManagerBuilder {
 		moduleManager.onBuildPrepared();
 		moduleManager.init();
 		for (Module module : registeredModules) {
+			logInfo("----------- " + getClass().getSimpleName() + " ------------");
 			module.printDetails();
+			logInfo("-------- End of " + getClass().getSimpleName() + " --------");
 		}
 
 		moduleManager.onBuildCompleted();
