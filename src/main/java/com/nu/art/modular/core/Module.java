@@ -23,6 +23,8 @@ package com.nu.art.modular.core;
 import com.nu.art.belog.Logger;
 import com.nu.art.core.generics.Processor;
 import com.nu.art.core.tools.ArrayTools;
+import com.nu.art.core.utils.DebugFlags;
+import com.nu.art.core.utils.DebugFlags.DebugFlag;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
@@ -32,6 +34,8 @@ import java.lang.reflect.Field;
 public abstract class Module
 	extends Logger
 	implements ModuleManagerDelegator {
+
+	public final DebugFlag DebugFlag = DebugFlags.createFlag(getClass());
 
 	private ModuleManager moduleManager;
 
