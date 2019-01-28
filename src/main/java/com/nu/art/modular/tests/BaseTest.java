@@ -38,7 +38,7 @@ public abstract class BaseTest
 							counter.notify();
 						}
 					}
-				}, "test-" + test.name).start();
+				}, "test--" + test.name).start();
 			}
 
 			while (counter.get() > 0) {
@@ -98,6 +98,7 @@ public abstract class BaseTest
 
 		private final AtomicReference<T> ref = new AtomicReference<>();
 		private String name;
+		private String description;
 		private Processor<AsyncTest<T>> processor;
 		private TestValidator<T> validator;
 		private T expectedValue;
@@ -112,6 +113,11 @@ public abstract class BaseTest
 
 		public AsyncTest<T> setName(String name) {
 			this.name = name;
+			return this;
+		}
+
+		public AsyncTest<T> setDescription(String description) {
+			this.description = description;
 			return this;
 		}
 
@@ -145,11 +151,15 @@ public abstract class BaseTest
 		}
 
 		public final synchronized void _set(T value) {
+			logDebug("Setting result: " + value);
+
 			ref.set(value);
 			_notify();
 		}
 
 		private synchronized void _wait(int timeout) {
+			logInfo("Waiting: " + timeout + "ms");
+
 			try {
 				this.wait(timeout);
 			} catch (InterruptedException e) {
@@ -158,6 +168,8 @@ public abstract class BaseTest
 		}
 
 		private synchronized void _wait() {
+			logInfo("Waiting...");
+
 			try {
 				this.wait();
 			} catch (InterruptedException e) {
@@ -166,6 +178,8 @@ public abstract class BaseTest
 		}
 
 		public final synchronized void _set(Throwable t) {
+			logError("Setting error: ", t);
+
 			this.t = t;
 			_notify();
 		}
@@ -186,6 +200,7 @@ public abstract class BaseTest
 		}
 
 		private void execute() {
+			logInfo("Running  test: " + description);
 			processor.process(this);
 			_wait(timeout);
 		}
@@ -198,6 +213,14 @@ public abstract class BaseTest
 
 	protected final <T> AsyncTestim<T> createTestGroup() {
 		return createTestGroup(Thread.currentThread().getStackTrace()[2].getMethodName());
+	}
+
+	protected final AsyncTest<Boolean> createDefaultTest(String name, String description) {
+		return new AsyncTest<Boolean>()
+			.setName(name)
+			.setDescription(description)
+			.expectedValue(true)
+			.setValidator(true);
 	}
 
 	protected final <T> AsyncTestim<T> createTestGroup(String name) {

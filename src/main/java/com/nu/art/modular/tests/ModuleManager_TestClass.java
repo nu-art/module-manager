@@ -9,7 +9,7 @@ import com.nu.art.modular.core.ModuleManagerBuilder;
 import com.nu.art.modular.core.ModulesPack;
 
 public class ModuleManager_TestClass
-	extends Logger {
+	extends BaseTest {
 
 	public static ModuleManager moduleManager;
 
