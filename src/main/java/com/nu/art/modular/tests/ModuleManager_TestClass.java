@@ -2,14 +2,13 @@ package com.nu.art.modular.tests;
 
 import com.nu.art.belog.BeLogged;
 import com.nu.art.belog.DefaultLogClient;
-import com.nu.art.belog.Logger;
 import com.nu.art.modular.core.Module;
 import com.nu.art.modular.core.ModuleManager;
 import com.nu.art.modular.core.ModuleManagerBuilder;
 import com.nu.art.modular.core.ModulesPack;
 
 public class ModuleManager_TestClass
-	extends BaseTest {
+	extends ComponentBaseTest {
 
 	public static ModuleManager moduleManager;
 

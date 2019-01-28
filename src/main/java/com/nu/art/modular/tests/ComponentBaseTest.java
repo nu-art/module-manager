@@ -7,27 +7,78 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public abstract class BaseTest
+public abstract class ComponentBaseTest
 	extends Logger {
 
-	public class AsyncTestim<T> {
+	@SuppressWarnings("unchecked")
+	public abstract class BaseTest<T extends BaseTest> {
 
-		private String name;
-		private ArrayList<AsyncTest<T>> tests = new ArrayList<>();
+		protected String name;
+		protected String description;
+		protected Throwable t;
 
-		public AsyncTestim<T> addTest(AsyncTest<T> test) {
+		public String getName() {
+			return name;
+		}
+
+		public T setName(String name) {
+			this.name = name;
+			return (T) this;
+		}
+
+		public T setDescription(String description) {
+			this.description = description;
+			return (T) this;
+		}
+
+		public Throwable getException() {
+			return t;
+		}
+
+		abstract void execute();
+
+		abstract boolean validate();
+	}
+
+	public class Scenario
+		extends BaseTest<Scenario> {
+
+		private ArrayList<BaseTest> tests = new ArrayList<>();
+
+		public Scenario addTest(BaseTest test) {
+			if (test instanceof TestItem)
+				((TestItem) test).setTimeout(-1);
 			tests.add(test);
 			return this;
 		}
 
-		public final AsyncTestim<T> setName(String name) {
-			this.name = name;
+		@Override
+		public final void execute() {
+			for (BaseTest test : tests) {
+				test.execute();
+				test.validate();
+			}
+		}
+
+		@Override
+		boolean validate() {
+			return true;
+		}
+	}
+
+	public class AsyncScenario
+		extends BaseTest<AsyncScenario> {
+
+		private ArrayList<BaseTest> tests = new ArrayList<>();
+
+		public AsyncScenario addTest(BaseTest test) {
+			tests.add(test);
 			return this;
 		}
 
 		public void execute() {
 			final AtomicInteger counter = new AtomicInteger();
-			for (final AsyncTest<T> test : tests) {
+			for (final BaseTest test : tests) {
 				counter.incrementAndGet();
 				new Thread(new Runnable() {
 					@Override
@@ -51,9 +102,14 @@ public abstract class BaseTest
 				}
 			}
 
-			AsyncTest<T>[] failedTests = getFailedTests();
+			validate();
+		}
+
+		@Override
+		protected boolean validate() {
+			BaseTest[] failedTests = getFailedTests();
 			if (failedTests.length == 0)
-				return;
+				return true;
 
 			try {
 				Thread.sleep(500);
@@ -62,7 +118,7 @@ public abstract class BaseTest
 			}
 
 			logError("Error in test " + name);
-			for (AsyncTest<?> failedTest : failedTests) {
+			for (BaseTest failedTest : failedTests) {
 				logError(" - Action name: " + failedTest.getName());
 				logError(failedTest.getException());
 				logError("            ----------------------------------------------------             ");
@@ -75,17 +131,13 @@ public abstract class BaseTest
 			                   "unchecked",
 			                   "SuspiciousToArrayCall"
 		                   })
-		private AsyncTest<T>[] getFailedTests() {
-			ArrayList<AsyncTest<T>> failedTests = new ArrayList<>();
-			for (final AsyncTest<T> test : tests) {
+		private BaseTest[] getFailedTests() {
+			ArrayList<BaseTest> failedTests = new ArrayList<>();
+			for (final BaseTest test : tests) {
 				if (!test.validate())
 					failedTests.add(test);
 			}
-			return (AsyncTest<T>[]) failedTests.toArray(new AsyncTest[0]);
-		}
-
-		public String getName() {
-			return name;
+			return failedTests.toArray(new TestItem[0]);
 		}
 	}
 
@@ -94,49 +146,33 @@ public abstract class BaseTest
 		boolean validate(ResultType result, Throwable t);
 	}
 
-	protected final class AsyncTest<T> {
+	protected final class TestItem<T>
+		extends BaseTest<TestItem<T>> {
 
 		private final AtomicReference<T> ref = new AtomicReference<>();
-		private String name;
-		private String description;
-		private Processor<AsyncTest<T>> processor;
+		private Processor<TestItem<T>> processor;
 		private TestValidator<T> validator;
 		private T expectedValue;
-		private Throwable t;
 		private int timeout = 10000;
 
-		public AsyncTest() { }
+		public TestItem() { }
 
-		public String getName() {
-			return name;
-		}
-
-		public AsyncTest<T> setName(String name) {
-			this.name = name;
-			return this;
-		}
-
-		public AsyncTest<T> setDescription(String description) {
-			this.description = description;
-			return this;
-		}
-
-		public AsyncTest<T> setTimeout(int timeout) {
+		public TestItem<T> setTimeout(int timeout) {
 			this.timeout = timeout;
 			return this;
 		}
 
-		public AsyncTest<T> setProcessor(Processor<AsyncTest<T>> processor) {
+		public TestItem<T> setProcessor(Processor<TestItem<T>> processor) {
 			this.processor = processor;
 			return this;
 		}
 
-		public AsyncTest<T> setValidator(TestValidator<T> validator) {
+		public TestItem<T> setValidator(TestValidator<T> validator) {
 			this.validator = validator;
 			return this;
 		}
 
-		public AsyncTest<T> setValidator(final boolean expectedSuccess) {
+		public TestItem<T> setValidator(final boolean expectedSuccess) {
 			this.validator = new TestValidator<T>() {
 				@Override
 				public boolean validate(T result, Throwable t) {
@@ -184,11 +220,7 @@ public abstract class BaseTest
 			_notify();
 		}
 
-		public Throwable getException() {
-			return t;
-		}
-
-		private boolean validate() {
+		final boolean validate() {
 			T result = ref.get();
 			if (t == null)
 				if (result == null)
@@ -199,31 +231,40 @@ public abstract class BaseTest
 			return validator.validate(result, this.t);
 		}
 
-		private void execute() {
+		final void execute() {
 			logInfo("Running  test: " + description);
 			processor.process(this);
-			_wait(timeout);
+			if (timeout > 0)
+				_wait(timeout);
 		}
 
-		public AsyncTest<T> expectedValue(T expectedValue) {
+		public TestItem<T> expectedValue(T expectedValue) {
 			this.expectedValue = expectedValue;
 			return this;
 		}
 	}
 
-	protected final <T> AsyncTestim<T> createTestGroup() {
-		return createTestGroup(Thread.currentThread().getStackTrace()[2].getMethodName());
-	}
-
-	protected final AsyncTest<Boolean> createDefaultTest(String name, String description) {
-		return new AsyncTest<Boolean>()
+	protected final TestItem<Boolean> createTest(String name, String description) {
+		return new TestItem<Boolean>()
 			.setName(name)
 			.setDescription(description)
 			.expectedValue(true)
 			.setValidator(true);
 	}
 
-	protected final <T> AsyncTestim<T> createTestGroup(String name) {
-		return new AsyncTestim<T>().setName(name);
+	protected final AsyncScenario createAsyncScenario() {
+		return createAsyncScenario(Thread.currentThread().getStackTrace()[2].getMethodName());
+	}
+
+	protected final AsyncScenario createAsyncScenario(String name) {
+		return new AsyncScenario().setName(name);
+	}
+
+	protected final Scenario createScenario() {
+		return createScenario(Thread.currentThread().getStackTrace()[2].getMethodName());
+	}
+
+	protected final Scenario createScenario(String name) {
+		return new Scenario().setName(name);
 	}
 }
