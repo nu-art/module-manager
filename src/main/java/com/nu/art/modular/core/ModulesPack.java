@@ -20,6 +20,7 @@
 
 package com.nu.art.modular.core;
 
+import com.nu.art.belog.Logger;
 import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.core.tools.ArrayTools;
 
@@ -29,7 +30,8 @@ import com.nu.art.core.tools.ArrayTools;
  * <br>
  * Each ModulePack is defined by a list of {@link Module}s which are provided in the intialization of the application.
  */
-public class ModulesPack {
+public class ModulesPack
+	extends Logger {
 
 	private final Class<? extends Module>[] moduleTypes;
 
