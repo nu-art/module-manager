@@ -52,6 +52,11 @@ public class EventDispatcher
 	}
 
 	public final void addListener(Object listener) {
+		for (WeakReference<Object> ref : _listeners) {
+			if (ref.get() == listener)
+				return;
+		}
+
 		_listeners = ArrayTools.appendElement(_listeners, new WeakReference<>(listener));
 	}
 

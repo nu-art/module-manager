@@ -25,6 +25,7 @@ import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.core.exceptions.runtime.ImplementationMissingException;
 import com.nu.art.core.generics.GenericParamExtractor;
 import com.nu.art.core.generics.Processor;
+import com.nu.art.core.interfaces.Condition;
 import com.nu.art.core.interfaces.ILogger;
 import com.nu.art.core.tools.ArrayTools;
 import com.nu.art.modular.interfaces.ModuleManagerDelegator;
@@ -33,6 +34,7 @@ import com.nu.art.reflection.tools.ART_Tools;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -88,7 +90,12 @@ public class ModuleManager
 
 		@Override
 		protected Field[] extractFieldsFromInstance(Class<?> injecteeType) {
-			return ART_Tools.getFieldsWithAnnotationAndTypeFromClassHierarchy(injecteeType, Object.class, null, null, Module.class);
+			return ART_Tools.getAllFieldsInHierarchy(injecteeType, new Condition<Field>() {
+				@Override
+				public boolean checkCondition(Field field) {
+					return Module.class.isAssignableFrom(field.getType()) && !Modifier.isStatic(field.getModifiers());
+				}
+			});
 		}
 	}
 
