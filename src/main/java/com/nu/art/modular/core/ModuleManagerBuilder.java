@@ -21,7 +21,8 @@
 package com.nu.art.modular.core;
 
 import com.nu.art.belog.Logger;
-import com.nu.art.core.tools.ArrayTools;
+import com.nu.art.modular.core.ModuleManager.ModuleCreatedListener;
+import com.nu.art.modular.core.ModuleManager.ModuleInitializedListener;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
 import java.util.ArrayList;
@@ -30,8 +31,18 @@ public class ModuleManagerBuilder
 	extends Logger {
 
 	private ArrayList<ModulesPack> modulePacks = new ArrayList<>();
+	private ModuleInitializedListener moduleInitializedListener = (this instanceof ModuleInitializedListener ? (ModuleInitializedListener) this : null);
+	private ModuleCreatedListener moduleCreatedListener = (this instanceof ModuleCreatedListener ? (ModuleCreatedListener) this : null);
 
 	public ModuleManagerBuilder() {
+	}
+
+	public void setModuleInitializedListener(ModuleInitializedListener moduleInitializedListener) {
+		this.moduleInitializedListener = moduleInitializedListener;
+	}
+
+	public void setModuleCreatedListener(ModuleCreatedListener moduleCreatedListener) {
+		this.moduleCreatedListener = moduleCreatedListener;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -54,9 +65,10 @@ public class ModuleManagerBuilder
 	}
 
 	public final ModuleManager build(ModuleManager moduleManager) {
-		ArrayList<Class<? extends Module>> modulesTypes = new ArrayList<>();
+		moduleManager.setModuleCreatedListener(this.moduleCreatedListener);
+		moduleManager.setModuleInitializedListener(this.moduleInitializedListener);
 
-		ArrayList<Module> orderedModules = new ArrayList<>();
+		ArrayList<Class<? extends Module>> modulesTypes = new ArrayList<>();
 
 		for (ModulesPack pack : modulePacks) {
 			pack.setManager(moduleManager);
@@ -65,16 +77,9 @@ public class ModuleManagerBuilder
 					continue;
 
 				modulesTypes.add(moduleType);
-				Module module = moduleManager.registerModule(moduleType);
-				if (module == null)
-					continue;
-
-				orderedModules.add(module);
-				setupModule(module);
+				moduleManager.registerModule(moduleType);
 			}
 		}
-
-		moduleManager.setOrderedModules(ArrayTools.asArray(orderedModules, Module.class));
 
 		for (ModulesPack pack : modulePacks) {
 			pack.init();
@@ -97,9 +102,6 @@ public class ModuleManagerBuilder
 
 		moduleManager.onBuildCompleted();
 		return moduleManager;
-	}
-
-	protected void setupModule(Module module) {
 	}
 
 	@SuppressWarnings("unused")

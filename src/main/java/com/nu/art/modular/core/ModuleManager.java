@@ -58,9 +58,14 @@ public class ModuleManager
 		logVerbose(" ");
 	}
 
-	public interface OnModuleInitializedListener {
+	public interface ModuleInitializedListener {
 
 		void onModuleInitialized(Module module);
+	}
+
+	public interface ModuleCreatedListener {
+
+		void onModuleCreated(Module module);
 	}
 
 	public final class ModuleInjector
@@ -89,7 +94,8 @@ public class ModuleManager
 
 	private final ModuleInjector moduleInjector = new ModuleInjector();
 
-	private OnModuleInitializedListener moduleInitializedListener;
+	private ModuleInitializedListener moduleInitializedListener;
+	private ModuleCreatedListener moduleCreatedListener;
 
 	/**
 	 * Holds a references to all the module types which have registered to this main module,
@@ -135,19 +141,16 @@ public class ModuleManager
 		return getModule(moduleType, true);
 	}
 
-	final void setOrderedModules(Module[] orderedModules) {
-		this.orderedModules = orderedModules;
-		for (Module orderedModule : orderedModules) {
-			eventDispatcher.addListener(orderedModule);
-		}
-	}
-
 	protected final Module[] getOrderedModules() {
 		return orderedModules;
 	}
 
-	public final void setModuleListener(OnModuleInitializedListener moduleInitializedListener) {
+	public final void setModuleInitializedListener(ModuleInitializedListener moduleInitializedListener) {
 		this.moduleInitializedListener = moduleInitializedListener;
+	}
+
+	public final void setModuleCreatedListener(ModuleCreatedListener moduleCreatedListener) {
+		this.moduleCreatedListener = moduleCreatedListener;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -178,12 +181,21 @@ public class ModuleManager
 	 * @param moduleType The module type to register with the Module Manager.
 	 */
 	@SuppressWarnings("unchecked")
-	final <_Module extends Module> _Module registerModule(Class<_Module> moduleType) {
+	final <_Module extends Module> void registerModule(Class<_Module> moduleType) {
 		_Module module = (_Module) registeredModules.get(moduleType);
 		if (module != null)
-			return null;
+			return;
 
+		registerModuleType(moduleType);
+	}
+
+	final <_Module extends Module> void registerModuleType(Class<_Module> moduleType) {
+		_Module module;
 		module = ReflectiveTools.newInstance(moduleType);
+		registerModuleInstance(module);
+	}
+
+	final <_Module extends Module> void registerModuleInstance(_Module module) {
 		module.setMainManager(this);
 
 		for (Class<? extends Module> key : module.keys) {
@@ -192,7 +204,13 @@ public class ModuleManager
 				logWarning("Shared Module key " + key + " between modules: " + olderModule.getClass() + " and " + module.getClass());
 		}
 
-		return module;
+		eventDispatcher.addListener(module);
+		this.orderedModules = ArrayTools.appendElement(this.orderedModules, module);
+
+		if (moduleCreatedListener == null)
+			return;
+
+		moduleCreatedListener.onModuleCreated(module);
 	}
 
 	protected void onBuildCompleted() {}
