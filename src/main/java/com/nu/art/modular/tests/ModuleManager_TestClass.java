@@ -1,11 +1,13 @@
 package com.nu.art.modular.tests;
 
+import com.nu.art.belog.BeConfig;
 import com.nu.art.belog.BeLogged;
-import com.nu.art.belog.DefaultLogClient;
 import com.nu.art.modular.core.Module;
 import com.nu.art.modular.core.ModuleManager;
 import com.nu.art.modular.core.ModuleManagerBuilder;
 import com.nu.art.modular.core.ModulesPack;
+
+import static com.nu.art.belog.loggers.JavaLogger.Config_FastJavaLogger;
 
 public class ModuleManager_TestClass
 	extends ComponentBaseTest {
@@ -17,7 +19,7 @@ public class ModuleManager_TestClass
 		if (moduleManager != null)
 			return;
 
-		BeLogged.getInstance().addClient(new DefaultLogClient());
+		BeLogged.getInstance().setConfig(Config_FastJavaLogger);
 		moduleManager = new ModuleManagerBuilder().addModules(moduleTypes).build();
 	}
 
@@ -26,7 +28,7 @@ public class ModuleManager_TestClass
 		if (moduleManager != null)
 			return;
 
-		BeLogged.getInstance().addClient(new DefaultLogClient());
+		BeLogged.getInstance().setConfig(Config_FastJavaLogger);
 		moduleManager = new ModuleManagerBuilder().addModulePacks(packs).build();
 	}
 
