@@ -1,6 +1,5 @@
 package com.nu.art.modular.tests;
 
-import com.nu.art.belog.BeConfig;
 import com.nu.art.belog.BeLogged;
 import com.nu.art.modular.core.Module;
 import com.nu.art.modular.core.ModuleManager;
@@ -13,6 +12,12 @@ public class ModuleManager_TestClass
 	extends ComponentBaseTest {
 
 	public static ModuleManager moduleManager;
+
+	protected void printTestName() {
+		StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
+		String testName = getClass().getSimpleName() + "." + stackTraceElement.getMethodName();
+		System.out.println("\n------------ " + testName + " --------------");
+	}
 
 	@SuppressWarnings("unchecked")
 	public static void initWithModules(Class<? extends Module>... moduleTypes) {
