@@ -86,6 +86,7 @@ public abstract class ComponentBaseTest
 						test.execute();
 						counter.decrementAndGet();
 						synchronized (counter) {
+							logDebug("Test is finished: " + test.name);
 							counter.notify();
 						}
 					}
@@ -111,11 +112,11 @@ public abstract class ComponentBaseTest
 			if (failedTests.length == 0)
 				return true;
 
-//			try {
-//				Thread.sleep(500);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
+			//			try {
+			//				Thread.sleep(500);
+			//			} catch (InterruptedException e) {
+			//				e.printStackTrace();
+			//			}
 
 			logError("Error in test " + name);
 			for (BaseTest failedTest : failedTests) {
