@@ -71,15 +71,10 @@ public abstract class Module
 	}
 
 	protected final <Type extends ModuleItem> Type createModuleItem(Class<Type> moduleItemType) {
-		Type type = instantiateModuleItem(moduleItemType);
-		type.init();
-		return type;
-	}
-
-	protected <Type extends ModuleItem> Type instantiateModuleItem(Class<Type> moduleItemType) {
 		Type moduleItem = ReflectiveTools.newInstance(moduleItemType);
 		moduleItem.setModuleManager(moduleManager);
-		moduleItem.prepare();
+		moduleItem._prepare();
+		moduleItem.init();
 		return moduleItem;
 	}
 

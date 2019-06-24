@@ -36,6 +36,8 @@ public abstract class ModuleItem
 
 	protected abstract void init();
 
+	protected void prepare() {}
+
 	public final <ListenerType> void dispatchModuleEvent(String message, Class<ListenerType> listenerType, final Processor<ListenerType> processor) {
 		moduleManager.dispatchModuleEvent(this, message, listenerType, processor);
 	}
@@ -49,7 +51,8 @@ public abstract class ModuleItem
 		this.moduleManager = moduleManager;
 	}
 
-	final void prepare() {
+	final void _prepare() {
+		prepare();
 		moduleManager.prepareModuleItem(this);
 	}
 
