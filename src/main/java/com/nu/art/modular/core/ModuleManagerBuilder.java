@@ -72,7 +72,7 @@ public class ModuleManagerBuilder
 
 		for (ModulesPack pack : modulePacks) {
 			pack.setManager(moduleManager);
-			for (Class<? extends Module> moduleType : pack.getModuleTypes()) {
+			for (Class<? extends Module> moduleType : pack.moduleTypes) {
 				if (modulesTypes.contains(moduleType))
 					continue;
 
@@ -104,7 +104,6 @@ public class ModuleManagerBuilder
 		return moduleManager;
 	}
 
-	@SuppressWarnings("unused")
 	private void validateModules(Module[] allRegisteredModuleInstances) {
 		ValidationResult result = new ValidationResult();
 
@@ -115,7 +114,6 @@ public class ModuleManagerBuilder
 			throw new com.nu.art.modular.exceptions.ModuleNotSupportedException("\n" + result.getErrorData());
 	}
 
-	@SuppressWarnings("unused")
 	protected void postInit(Module[] allRegisteredModuleInstances) {
 	}
 }

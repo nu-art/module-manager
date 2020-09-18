@@ -24,6 +24,8 @@ import com.nu.art.belog.Logger;
 import com.nu.art.core.exceptions.runtime.BadImplementationException;
 import com.nu.art.core.tools.ArrayTools;
 
+import java.util.HashMap;
+
 /**
  * This is an important aspect of Cyborg, these packs are meant to encapsulate <b>YOUR</b> modules, and to allow you to add different packs to construct your
  * application or library.
@@ -33,7 +35,7 @@ import com.nu.art.core.tools.ArrayTools;
 public class ModulesPack
 	extends Logger {
 
-	private final Class<? extends Module>[] moduleTypes;
+	final Class<? extends Module>[] moduleTypes;
 
 	@SuppressWarnings("unchecked")
 	public ModulesPack(Class<? extends Module>... moduleTypes) {
@@ -41,14 +43,10 @@ public class ModulesPack
 		this.moduleTypes = moduleTypes;
 	}
 
-	private ModuleManager manager;
+	protected ModuleManager manager;
 
 	final void setManager(ModuleManager manager) {
 		this.manager = manager;
-	}
-
-	final Class<? extends Module>[] getModuleTypes() {
-		return moduleTypes;
 	}
 
 	protected final <Type extends Module> Type getModule(Class<Type> moduleType) {

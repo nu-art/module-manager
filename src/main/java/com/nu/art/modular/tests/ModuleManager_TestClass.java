@@ -6,12 +6,18 @@ import com.nu.art.modular.core.ModuleManager;
 import com.nu.art.modular.core.ModuleManagerBuilder;
 import com.nu.art.modular.core.ModulesPack;
 
+import org.junit.Before;
+
 import static com.nu.art.belog.loggers.JavaLogger.Config_FastJavaLogger;
 
-public class ModuleManager_TestClass
+public abstract class ModuleManager_TestClass
 	extends ComponentBaseTest {
 
 	public static ModuleManager moduleManager;
+
+	public ModuleManager_TestClass() {
+		moduleManager.getInjector().injectToInstance(this);
+	}
 
 	protected void printTestName() {
 		StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];

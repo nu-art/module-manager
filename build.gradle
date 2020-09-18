@@ -23,6 +23,8 @@ applyJavaLibrary()
 dependencies {
     api(resolveDependency('reflection', 'com.nu-art-software', "${NU_ART_VERSION}"))
     api(resolveDependency('belog', 'com.nu-art-software', "${NU_ART_VERSION}"))
+    implementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-core:${MOCKITO_VERSION}"
 }
 
 if (project.hasProperty("addTask_DeployJavaArtifactToCentral")) {

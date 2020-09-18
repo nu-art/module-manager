@@ -196,6 +196,10 @@ public class ModuleManager
 		registerModuleType(moduleType);
 	}
 
+	public final <_Module extends Module> void registerMockModule(Class<_Module> moduleType, _Module module) {
+		registeredModules.put(moduleType, module);
+	}
+
 	final <_Module extends Module> void registerModuleType(Class<_Module> moduleType) {
 		_Module module;
 		module = ReflectiveTools.newInstance(moduleType);
