@@ -33,6 +33,7 @@ public class ModuleManagerBuilder
 	private ArrayList<ModulesPack> modulePacks = new ArrayList<>();
 	private ModuleInitializedListener moduleInitializedListener = (this instanceof ModuleInitializedListener ? (ModuleInitializedListener) this : null);
 	private ModuleCreatedListener moduleCreatedListener = (this instanceof ModuleCreatedListener ? (ModuleCreatedListener) this : null);
+	protected ModuleManager manager;
 
 	public ModuleManagerBuilder() {
 	}
@@ -65,6 +66,7 @@ public class ModuleManagerBuilder
 	}
 
 	public final ModuleManager build(ModuleManager moduleManager) {
+		this.manager = moduleManager;
 		moduleManager.setModuleCreatedListener(this.moduleCreatedListener);
 		moduleManager.setModuleInitializedListener(this.moduleInitializedListener);
 
