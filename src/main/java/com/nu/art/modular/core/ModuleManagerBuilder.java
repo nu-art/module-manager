@@ -26,6 +26,7 @@ import com.nu.art.modular.core.ModuleManager.ModuleInitializedListener;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ModuleManagerBuilder
 	extends Logger {
@@ -52,6 +53,11 @@ public class ModuleManagerBuilder
 			ModulesPack pack = ReflectiveTools.newInstance(packType);
 			this.modulePacks.add(pack);
 		}
+		return this;
+	}
+
+	public final ModuleManagerBuilder addModulePacks(ModulesPack... modulePacks) {
+		this.modulePacks.addAll(Arrays.asList(modulePacks));
 		return this;
 	}
 
