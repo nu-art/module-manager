@@ -23,20 +23,27 @@ package com.nu.art.modular.core;
 import com.nu.art.belog.Logger;
 import com.nu.art.modular.core.ModuleManager.ModuleCreatedListener;
 import com.nu.art.modular.core.ModuleManager.ModuleInitializedListener;
+import com.nu.art.modular.interfaces.OnApplicationStartingListener;
 import com.nu.art.reflection.tools.ReflectiveTools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ModuleManagerBuilder
-	extends Logger {
+	extends Logger
+	implements OnApplicationStartingListener {
 
 	private ArrayList<ModulesPack> modulePacks = new ArrayList<>();
 	private ModuleInitializedListener moduleInitializedListener = (this instanceof ModuleInitializedListener ? (ModuleInitializedListener) this : null);
 	private ModuleCreatedListener moduleCreatedListener = (this instanceof ModuleCreatedListener ? (ModuleCreatedListener) this : null);
 	protected ModuleManager manager;
+	private OnApplicationStartingListener listener = this;
 
 	public ModuleManagerBuilder() {
+	}
+
+	public void setOnApplicationStartingListener(OnApplicationStartingListener listener) {
+		this.listener = listener;
 	}
 
 	public void setModuleInitializedListener(ModuleInitializedListener moduleInitializedListener) {
@@ -100,7 +107,7 @@ public class ModuleManagerBuilder
 			moduleManager.getInjector().injectToInstance(registeredModule);
 		}
 
-		onApplicationStarting();
+		listener.onApplicationStarting();
 		moduleManager.init();
 		for (Module module : registeredModules) {
 			logInfo("----------- " + module.getClass().getSimpleName() + " ------------");
@@ -125,7 +132,7 @@ public class ModuleManagerBuilder
 	protected void postInit(Module[] allRegisteredModuleInstances) {
 	}
 
-	protected void onApplicationStarting() {
+	public void onApplicationStarting() {
 		logVerbose(" Application Starting...");
 		logVerbose(" ");
 		logVerbose(" _______  _______  _______  _       _________ _______  _______ __________________ _______  _          _______ _________ _______  _______ _________ _______  ______  ");
