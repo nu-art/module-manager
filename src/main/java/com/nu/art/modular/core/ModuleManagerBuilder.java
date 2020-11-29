@@ -107,6 +107,9 @@ public class ModuleManagerBuilder
 			moduleManager.getInjector().injectToInstance(registeredModule);
 		}
 
+		logVerbose(" Application Starting...");
+		logVerbose(" ");
+
 		listener.onApplicationStarting();
 		moduleManager.init();
 		for (Module module : registeredModules) {
@@ -133,8 +136,6 @@ public class ModuleManagerBuilder
 	}
 
 	public void onApplicationStarting() {
-		logVerbose(" Application Starting...");
-		logVerbose(" ");
 		logVerbose(" _______  _______  _______  _       _________ _______  _______ __________________ _______  _          _______ _________ _______  _______ _________ _______  ______  ");
 		logVerbose("(  ___  )(  ____ )(  ____ )( \\      \\__   __/(  ____ \\(  ___  )\\__   __/\\__   __/(  ___  )( (    /|  (  ____ \\\\__   __/(  ___  )(  ____ )\\__   __/(  ____ \\(  __  \\ ");
 		logVerbose("| (   ) || (    )|| (    )|| (         ) (   | (    \\/| (   ) |   ) (      ) (   | (   ) ||  \\  ( |  | (    \\/   ) (   | (   ) || (    )|   ) (   | (    \\/| (  \\  )");
