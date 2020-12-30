@@ -42,16 +42,20 @@ public class ModuleManagerBuilder
 	public ModuleManagerBuilder() {
 	}
 
-	public void setOnApplicationStartingListener(OnApplicationStartingListener listener) {
-		this.listener = listener;
+	public ModuleManagerBuilder setOnApplicationStartingListener(OnApplicationStartingListener listener) {
+		if (listener != null)
+			this.listener = listener;
+		return this;
 	}
 
-	public void setModuleInitializedListener(ModuleInitializedListener moduleInitializedListener) {
+	public ModuleManagerBuilder setModuleInitializedListener(ModuleInitializedListener moduleInitializedListener) {
 		this.moduleInitializedListener = moduleInitializedListener;
+		return this;
 	}
 
-	public void setModuleCreatedListener(ModuleCreatedListener moduleCreatedListener) {
+	public ModuleManagerBuilder setModuleCreatedListener(ModuleCreatedListener moduleCreatedListener) {
 		this.moduleCreatedListener = moduleCreatedListener;
+		return this;
 	}
 
 	@SuppressWarnings("unchecked")
