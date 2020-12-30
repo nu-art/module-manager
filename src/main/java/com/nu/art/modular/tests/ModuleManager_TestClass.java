@@ -6,8 +6,6 @@ import com.nu.art.modular.core.ModuleManager;
 import com.nu.art.modular.core.ModuleManagerBuilder;
 import com.nu.art.modular.core.ModulesPack;
 
-import org.junit.Before;
-
 import static com.nu.art.belog.loggers.JavaLogger.Config_FastJavaLogger;
 
 public abstract class ModuleManager_TestClass

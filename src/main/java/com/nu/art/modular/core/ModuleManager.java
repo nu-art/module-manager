@@ -46,6 +46,8 @@ public class ModuleManager
 	extends Logger
 	implements ModuleManagerDelegator {
 
+	private boolean intialized;
+
 	public interface ModuleInitializedListener {
 
 		void onModuleInitialized(Module module);
@@ -155,7 +157,11 @@ public class ModuleManager
 		return module;
 	}
 
-	final void init() {
+	public final synchronized void init() {
+		if (intialized)
+			throw new BadImplementationException("Module manager was already initialized!");
+
+		intialized = true;
 		for (Module module : orderedModules) {
 			module.assignToDefaultInterface();
 		}
@@ -168,6 +174,14 @@ public class ModuleManager
 
 			moduleInitializedListener.onModuleInitialized(module);
 		}
+
+		for (Module module : orderedModules) {
+			logInfo("----------- " + module.getClass().getSimpleName() + " ------------");
+			module.printDetails();
+			logInfo("-------- End of " + module.getClass().getSimpleName() + " --------");
+		}
+
+		onBuildCompleted();
 	}
 
 	/**

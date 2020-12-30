@@ -36,7 +36,7 @@ public class ModuleManagerBuilder
 	private ArrayList<ModulesPack> modulePacks = new ArrayList<>();
 	private ModuleInitializedListener moduleInitializedListener = (this instanceof ModuleInitializedListener ? (ModuleInitializedListener) this : null);
 	private ModuleCreatedListener moduleCreatedListener = (this instanceof ModuleCreatedListener ? (ModuleCreatedListener) this : null);
-	protected ModuleManager manager;
+	protected final ModuleManager manager = new ModuleManager();
 	private OnApplicationStartingListener listener = this;
 
 	public ModuleManagerBuilder() {
@@ -79,24 +79,19 @@ public class ModuleManagerBuilder
 	}
 
 	public final ModuleManager build() {
-		return build(new ModuleManager());
-	}
-
-	public final ModuleManager build(ModuleManager moduleManager) {
-		this.manager = moduleManager;
-		moduleManager.setModuleCreatedListener(this.moduleCreatedListener);
-		moduleManager.setModuleInitializedListener(this.moduleInitializedListener);
+		manager.setModuleCreatedListener(this.moduleCreatedListener);
+		manager.setModuleInitializedListener(this.moduleInitializedListener);
 
 		ArrayList<Class<? extends Module>> modulesTypes = new ArrayList<>();
 
 		for (ModulesPack pack : modulePacks) {
-			pack.setManager(moduleManager);
+			pack.setManager(manager);
 			for (Class<? extends Module> moduleType : pack.moduleTypes) {
 				if (modulesTypes.contains(moduleType))
 					continue;
 
 				modulesTypes.add(moduleType);
-				moduleManager.registerModule(moduleType);
+				manager.registerModule(moduleType);
 			}
 		}
 
@@ -104,26 +99,26 @@ public class ModuleManagerBuilder
 			pack.init();
 		}
 
-		Module[] registeredModules = moduleManager.getOrderedModules();
+		Module[] registeredModules = manager.getOrderedModules();
 		validateModules(registeredModules);
 
 		for (Module registeredModule : registeredModules) {
-			moduleManager.getInjector().injectToInstance(registeredModule);
+			manager.getInjector().injectToInstance(registeredModule);
 		}
 
 		logVerbose(" Application Starting...");
 		logVerbose(" ");
 
 		listener.onApplicationStarting();
-		moduleManager.init();
+		manager.init();
 		for (Module module : registeredModules) {
 			logInfo("----------- " + module.getClass().getSimpleName() + " ------------");
 			module.printDetails();
 			logInfo("-------- End of " + module.getClass().getSimpleName() + " --------");
 		}
 
-		moduleManager.onBuildCompleted();
-		return moduleManager;
+		manager.onBuildCompleted();
+		return manager;
 	}
 
 	private void validateModules(Module[] allRegisteredModuleInstances) {
